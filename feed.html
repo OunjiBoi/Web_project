@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaceBUG Clone</title>
+    <link rel="stylesheet" href="feed.css">
+</head>
+
+<body>
+    <div class="container">
+
+        <aside class="left-sidebar">
+            <div class="profile-card">
+                <label for="profile-upload" class="profile-upload-area">
+                    <div id="current-profile-pic" class="profile-pic" 
+                         style="background-image: url('placeholder-profile-george.jpg');"></div>
+
+                    <input type="file" id="profile-upload" accept="image/*" style="display:none;">
+                </label>
+
+                <h2 class="username">George Boonmee</h2>
+                <div class="stats">
+                    <p><span class="count">2</span> Posts</p>
+                    <p><span class="count">8</span> Friends</p>
+                </div>
+                <p class="bio">Hello My name is George nice to meet you</p>
+            </div>
+
+            <nav class="settings-nav">
+                <a href="#"><span class="icon">⚙️</span> Setting</a>
+                <a href="#"><span class="icon">➡️</span> Logout</a>
+            </nav>
+
+            <button class="chat-button">
+                CHAT <span class="notification-dot">1</span>
+            </button>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <h1 class="logo">FaceBUG</h1>
+
+                <div class="search-box">
+                    <input type="text" placeholder="🔍 Search">
+                </div>
+
+                <div class="actions">
+                    <button class="notification-btn">🔔</button>
+                    <button class="create-btn">+ CREATE</button>
+                </div>
+            </header>
+
+            <div class="feed">
+
+                <div class="post">
+                    <div class="post-header">
+                        <div class="user-info">
+                            <div class="post-profile-pic" style="background-image: url('placeholder-profile-nico.jpg');"></div>
+                            <span class="post-username">Nico Musk</span>
+                        </div>
+                        <span class="post-time">9:35 PM, Yesterday</span>
+                    </div>
+
+                    <div class="post-image" style="background-image: url('placeholder-coffee-post.jpg');"></div>
+
+                    <div class="post-footer">
+                        <span class="action-icon">👍 Like</span>
+                        <span class="action-icon">💬 Comment</span>
+                        <span class="action-icon">📤 Share</span>
+                    </div>
+                </div>
+
+                <div class="post post-small">
+                    <div class="post-header">
+                        <div class="user-info">
+                            <div class="post-profile-pic" style="background-image: url('placeholder-profile-nico.jpg');"></div>
+                            <span class="post-username">Nico Musk</span>
+                        </div>
+                        <span class="post-time">9:35 PM, Yesterday</span>
+                    </div>
+
+                    <div class="post-content-preview" style="background-image: url('placeholder-forest-post.jpg');"></div>
+                </div>
+
+            </div>
+        </main>
+
+        <aside class="right-sidebar">
+            <h3>Friends</h3>
+
+            <ul class="friends-list">
+                <li><div class="friend-pic" style="background-image: url('placeholder-friend-yourself.jpg');"></div><span>Yourself</span></li>
+                <li><div class="friend-pic" style="background-image: url('placeholder-friend-black.jpg');"></div><span>Black</span></li>
+                <li><div class="friend-pic" style="background-image: url('placeholder-friend-chocolate.jpg');"></div><span>Chocolate</span></li>
+                <li><div class="friend-pic" style="background-image: url('placeholder-friend-nico.jpg');"></div><span>Nico</span></li>
+                <li><div class="friend-pic" style="background-image: url('placeholder-friend-jarlet.jpg');"></div><span>Jarlet</span></li>
+                <li><div class="friend-pic" style="background-image: url('placeholder-friend-john.jpg');"></div><span>John</span></li>
+                <li><div class="friend-pic" style="background-image: url('placeholder-friend-jack.jpg');"></div><span>Jack</span></li>
+                <li><div class="friend-pic" style="background-image: url('placeholder-friend-max.jpg');"></div><span>Max</span></li>
+            </ul>
+        </aside>
+
+    </div>
+
+    <script src="feed.js"></script>
+</body>
+</html>
