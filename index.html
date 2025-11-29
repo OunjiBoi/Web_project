@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FaceBUG Chat UI</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    </head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> </head>
 <body>
     <div class="chat-container">
         <div class="sidebar">
@@ -21,63 +20,16 @@
             
             <h2>Messages</h2>
             
-            <ul class="message-list">
-                <li class="message-item active">
-                    <img src="placeholder-avatar.png" alt="Black Panther" class="avatar">
-                    <div class="details">
-                        <span class="name">Black Panther</span>
-                        <span class="last-message">oh no, that RACIST!!!</span>
-                    </div>
-                    <span class="time">3m</span>
-                </li>
-                <li class="message-item">
-                    <img src="placeholder-avatar.png" alt="Chocolate Latte" class="avatar">
-                    <div class="details">
-                        <span class="name">Chocolate Latte</span>
-                        <span class="last-message">I miss you so much. my cupcake</span>
-                    </div>
-                    <span class="time">3h</span>
-                </li>
-                <li class="message-item">
-                    <img src="placeholder-avatar.png" alt="Nico Iacoast" class="avatar">
-                    <div class="details">
-                        <span class="name">Nico Iacoast</span>
-                        <span class="last-message">You pls don't reply me BACK!</span>
-                    </div>
-                    <span class="time">1d</span>
-                </li>
-                </ul>
-        </div>
+            </div>
         
         <div class="chat-area">
             <div class="chat-header">
                 <img src="placeholder-avatar.png" alt="Black Panther" class="avatar">
-                <span class="contact-name">Black Panther</span>
+                <span class="contact-name" id="contact-name">Black Panther</span>
                 <span class="material-icons info-icon">info</span>
             </div>
             
-            <div class="chat-messages">
-                <div class="message received">
-                    <img src="placeholder-avatar.png" alt="Black Panther" class="avatar">
-                    <p class="bubble">Hello</p>
-                    <span class="timestamp">6:40 am</span>
-                </div>
-
-                <div class="message sent">
-                    <p class="bubble outgoing-highlight">Hello mister Black!</p>
-                    <span class="timestamp">6:50 am</span>
-                </div>
-
-                <div class="message sent media">
-                    <img src="placeholder-gorilla.jpg" alt="Gorilla Image" class="chat-image">
-                    <span class="timestamp">6:50 am</span>
-                </div>
-                
-                <div class="message received">
-                    <img src="placeholder-avatar.png" alt="Black Panther" class="avatar">
-                    <p class="bubble">oh no, that RACIST!!!</p>
-                    <span class="timestamp">6:40 am</span>
-                </div>
+            <div class="chat-messages" id="chat-messages-container">
             </div>
             
             <div class="chat-input">
@@ -85,10 +37,11 @@
                     <span class="material-icons icon">image</span>
                     <span class="material-icons icon">sentiment_satisfied_alt</span> 
                 </div>
-                <input type="text" placeholder="Message...">
-                <span class="material-icons send-button">send</span>
+                <input type="text" placeholder="Message..." id="message-input-field"> 
+                <span class="material-icons send-button" id="send-msg-button">send</span>
             </div>
         </div>
     </div>
+    <script src="chatter.js"></script>
 </body>
 </html>
