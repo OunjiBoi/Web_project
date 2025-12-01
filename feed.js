@@ -1,70 +1,51 @@
 // document.addEventListener('DOMContentLoaded', () => {
 //     const fileInput = document.getElementById('profile-upload');
 //     const profilePic = document.getElementById('current-profile-pic');
-    
-//     // Key สำหรับจำ URL รูปไว้ (ถ้า Refresh หน้าจะได้ไม่หาย)
-//     const STORAGE_KEY = 'serverProfilePicUrl'; 
+//     const STORAGE_KEY_PIC = 'serverProfilePicUrl'; 
 
+//     // 1. โหลดข้อมูลโปรไฟล์ (ชื่อ + Bio) จาก Database
+//     fetch('/get-profile')
+//         .then(res => res.json())
+//         .then(data => {
+//             document.querySelectorAll('.username').forEach(el => el.innerText = data.username);
+//             const bioEl = document.querySelector('.bio');
+//             if (bioEl) bioEl.innerText = data.bio;
+//         });
+
+//     // 2. จัดการรูปภาพ (โหลด + อัปโหลด)
 //     if (fileInput && profilePic) {
-//         // 1. โหลดรูปล่าสุดมาแสดง
-//         const savedPicUrl = localStorage.getItem(STORAGE_KEY);
-//         if (savedPicUrl) {
-//             profilePic.style.backgroundImage = `url('${savedPicUrl}')`;
-//         }
+//         const savedPic = localStorage.getItem(STORAGE_KEY_PIC);
+//         if (savedPic) profilePic.style.backgroundImage = `url('${savedPic}')`;
 
-//         // 2. เมื่อเลือกไฟล์รูปภาพ
-//         fileInput.addEventListener('change', async function(event) {
-//             if (event.target.files && event.target.files[0]) {
-//                 const file = event.target.files[0];
-
-//                 // เตรียมข้อมูลเพื่อส่งไป Server
+//         fileInput.addEventListener('change', async (e) => {
+//             if (e.target.files[0]) {
 //                 const formData = new FormData();
-//                 formData.append('profilePic', file); // ชื่อนี้ต้องตรงกับ upload.single ใน server.js
+//                 formData.append('profilePic', e.target.files[0]);
 
-//                 try {
-//                     // ยิง Request ไปที่ Server
-//                     const response = await fetch('/upload-profile', {
-//                         method: 'POST',
-//                         body: formData
-//                     });
-
-//                     if (response.ok) {
-//                         const data = await response.json();
-//                         // data.imageUrl คือที่อยู่ไฟล์บน Server (เช่น /uploads/170123.jpg)
-                        
-//                         // แสดงรูปใหม่ทันที
-//                         profilePic.style.backgroundImage = `url('${data.imageUrl}')`;
-                        
-//                         // บันทึก URL ลง LocalStorage
-//                         localStorage.setItem(STORAGE_KEY, data.imageUrl);
-//                     } else {
-//                         console.error("Upload failed");
-//                         alert("อัปโหลดไม่สำเร็จ โปรดลองใหม่");
-//                     }
-//                 } catch (err) {
-//                     console.error("Error uploading file:", err);
+//                 const res = await fetch('/upload-profile', { method: 'POST', body: formData });
+//                 if (res.ok) {
+//                     const data = await res.json();
+//                     profilePic.style.backgroundImage = `url('${data.imageUrl}')`;
+//                     localStorage.setItem(STORAGE_KEY_PIC, data.imageUrl);
 //                 }
 //             }
 //         });
 //     }
 
-//     // --- ส่วนปุ่ม Chat Link ไปหน้า index.html ---
+//     // 3. ปุ่ม Chat Link
 //     const chatButton = document.querySelector('.chat-button');
 //     if (chatButton) {
-//         chatButton.addEventListener('click', () => {
-//             window.location.href = 'index.html';
-//         });
+//         chatButton.onclick = () => window.location.href = 'index.html';
 //     }
 // });
 
-
-
 document.addEventListener('DOMContentLoaded', () => {
+    // --- ส่วนที่ 1: จัดการ Profile (เหมือนเดิม) ---
     const fileInput = document.getElementById('profile-upload');
     const profilePic = document.getElementById('current-profile-pic');
     const STORAGE_KEY_PIC = 'serverProfilePicUrl'; 
 
-    // 1. โหลดข้อมูลโปรไฟล์ (ชื่อ + Bio) จาก Database
+    // โหลดข้อมูล Profile Header
     fetch('/get-profile')
         .then(res => res.json())
         .then(data => {
@@ -73,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (bioEl) bioEl.innerText = data.bio;
         });
 
-    // 2. จัดการรูปภาพ (โหลด + อัปโหลด)
+    // โหลดรูป Profile
     if (fileInput && profilePic) {
         const savedPic = localStorage.getItem(STORAGE_KEY_PIC);
         if (savedPic) profilePic.style.backgroundImage = `url('${savedPic}')`;
@@ -82,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target.files[0]) {
                 const formData = new FormData();
                 formData.append('profilePic', e.target.files[0]);
-
                 const res = await fetch('/upload-profile', { method: 'POST', body: formData });
                 if (res.ok) {
                     const data = await res.json();
@@ -93,9 +73,70 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. ปุ่ม Chat Link
+    // ปุ่ม Chat Link
     const chatButton = document.querySelector('.chat-button');
     if (chatButton) {
         chatButton.onclick = () => window.location.href = 'index.html';
     }
+
+    // --- ส่วนที่ 2: โหลดโพสต์จาก Database (เพิ่มใหม่) ---
+    loadPosts();
 });
+
+async function loadPosts() {
+    const feedContainer = document.querySelector('.feed');
+    
+    try {
+        const response = await fetch('/get-posts');
+        const posts = await response.json();
+
+        // ถ้ามีโพสต์ใหม่ ให้ล้างโพสต์ตัวอย่างออก (หรือจะเก็บไว้ก็ได้ ถ้าอยากล้างให้เอา comment ออก)
+        // feedContainer.innerHTML = ''; 
+
+        // วนลูปสร้างโพสต์ทีละอัน
+        posts.forEach(post => {
+            const postElement = createPostHTML(post);
+            // ใส่โพสต์ใหม่ไว้ด้านบนสุด
+            feedContainer.prepend(postElement); 
+        });
+
+    } catch (err) {
+        console.error("Error loading posts:", err);
+    }
+}
+
+function createPostHTML(post) {
+    const div = document.createElement('div');
+    div.className = 'post';
+
+    // แปลงเวลาให้สวยงาม
+    const dateOptions = { hour: 'numeric', minute: 'numeric', day: 'numeric', month: 'short' };
+    const timeString = new Date(post.time_posted).toLocaleDateString('en-US', dateOptions);
+
+    // เช็คว่ามีรูปไหม ถ้าไม่มีให้ซ่อน div รูป
+    const imageStyle = post.image_path ? `background-image: url('${post.image_path}');` : 'display: none;';
+
+    // สร้าง HTML ของโพสต์
+    div.innerHTML = `
+        <div class="post-header">
+            <div class="user-info">
+                <div class="post-profile-pic" style="background-image: url('https://via.placeholder.com/40');"></div>
+                <span class="post-username">${post.username}</span>
+            </div>
+            <span class="post-time">${timeString}</span>
+        </div>
+
+        <div class="post-content-text" style="padding: 0 15px 10px; color: #ddd;">
+            ${post.content}
+        </div>
+
+        <div class="post-image" style="${imageStyle}"></div>
+
+        <div class="post-footer">
+            <span class="action-icon">👍 Like</span>
+            <span class="action-icon">💬 Comment</span>
+            <span class="action-icon">📤 Share</span>
+        </div>
+    `;
+    return div;
+}
