@@ -37,6 +37,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (fileInput && profilePic) {
 
+        const chatButton = document.querySelector('.chat-button'); //
+    if (chatButton) {
+        chatButton.addEventListener('click', () => {
+            window.location.href = 'index.html'; // ไปหน้าแชท
+        });
+    }
+
+
         // โหลดรูปเดิม (ตอนนี้จะเป็น URL ที่ชี้ไปที่ Server เช่น /uploads/...)
         const savedPicUrl = localStorage.getItem(STORAGE_KEY);
         if (savedPicUrl) {
