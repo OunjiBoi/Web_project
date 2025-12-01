@@ -52,55 +52,57 @@
             </header>
 
             <div class="feed">
-
-                <div class="post">
-                    <div class="post-header">
-                        <div class="user-info">
-                            <div class="post-profile-pic" style="background-image: url('placeholder-profile-nico.jpg');"></div>
-                            <span class="post-username">Nico Musk</span>
-                        </div>
-                        <span class="post-time">9:35 PM, Yesterday</span>
-                    </div>
-
-                    <div class="post-image" style="background-image: url('placeholder-coffee-post.jpg');"></div>
-
-                    <div class="post-footer">
-                        <span class="action-icon">👍 Like</span>
-                        <span class="action-icon">💬 Comment</span>
-                        <span class="action-icon">📤 Share</span>
-                    </div>
                 </div>
-
-                <div class="post post-small">
-                    <div class="post-header">
-                        <div class="user-info">
-                            <div class="post-profile-pic" style="background-image: url('placeholder-profile-nico.jpg');"></div>
-                            <span class="post-username">Nico Musk</span>
-                        </div>
-                        <span class="post-time">9:35 PM, Yesterday</span>
-                    </div>
-
-                    <div class="post-content-preview" style="background-image: url('placeholder-forest-post.jpg');"></div>
-                </div>
-
-            </div>
         </main>
 
         <aside class="right-sidebar">
             <h3>Friends</h3>
 
             <ul class="friends-list">
-                <li><div class="friend-pic" style="background-image: url('placeholder-friend-yourself.jpg');"></div><span>Yourself</span></li>
-                <li><div class="friend-pic" style="background-image: url('placeholder-friend-black.jpg');"></div><span>Black</span></li>
-                <li><div class="friend-pic" style="background-image: url('placeholder-friend-chocolate.jpg');"></div><span>Chocolate</span></li>
-                <li><div class="friend-pic" style="background-image: url('placeholder-friend-nico.jpg');"></div><span>Nico</span></li>
-                <li><div class="friend-pic" style="background-image: url('placeholder-friend-jarlet.jpg');"></div><span>Jarlet</span></li>
-                <li><div class="friend-pic" style="background-image: url('placeholder-friend-john.jpg');"></div><span>John</span></li>
-                <li><div class="friend-pic" style="background-image: url('placeholder-friend-jack.jpg');"></div><span>Jack</span></li>
-                <li><div class="friend-pic" style="background-image: url('placeholder-friend-max.jpg');"></div><span>Max</span></li>
+                <li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>Yourself</span></li>
+                <li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>Black</span></li>
+                <li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>Chocolate</span></li>
+                <li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>Nico</span></li>
+                <li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>Jarlet</span></li>
+                <li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>John</span></li>
+                <li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>Jack</span></li>
+                <li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>Max</span></li>
             </ul>
         </aside>
 
+    </div>
+
+    <div id="comment-modal" class="modal-overlay">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            
+            <div class="modal-left">
+                <img id="modal-post-image" src="" alt="Post Image">
+            </div>
+
+            <div class="modal-right">
+                <div class="modal-header">
+                    <div class="user-info">
+                        <img id="modal-owner-pic" src="https://via.placeholder.com/40" class="avatar-small">
+                        <span id="modal-owner-name" class="username-bold">Username</span>
+                    </div>
+                </div>
+
+                <div class="comments-list" id="comments-list">
+                    </div>
+
+                <div class="modal-footer">
+                    <div class="action-icons"><span>❤️</span> <span>📤</span></div>
+                    
+                    <div class="like-count">512 Likes</div>
+                    
+                    <div class="comment-input-area">
+                        <input type="text" id="comment-input" placeholder="Add a comment...">
+                        <button id="submit-comment-btn">Post</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="feed.js"></script>
