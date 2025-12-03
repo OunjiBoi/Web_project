@@ -1,23 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- ส่วนที่ 1: จัดการ Profile (โหลดรูป/ชื่อ/อัปโหลด) ---
+    // 1. Profile & Upload
     const fileInput = document.getElementById('profile-upload');
     const profilePic = document.getElementById('current-profile-pic');
     const STORAGE_KEY_PIC = 'serverProfilePicUrl'; 
 
-    // โหลดข้อมูล Profile Header (ชื่อ + Bio)
-    fetch('/get-profile')
-        .then(res => res.json())
-        .then(data => {
-            // อัปเดตชื่อและ Bio ในหน้าเว็บ
-            document.querySelectorAll('.username').forEach(el => el.innerText = data.username);
-            const bioEl = document.querySelector('.bio');
-            if (bioEl) bioEl.innerText = data.bio;
-            
-            // เมื่อได้ชื่อแล้ว ให้ไปโหลดโพสต์
-            loadPosts(data.username); 
-        });
+    fetch('/get-profile').then(res => res.json()).then(data => {
+        document.querySelectorAll('.username').forEach(el => el.innerText = data.username);
+        const bioEl = document.querySelector('.bio');
+        if (bioEl) bioEl.innerText = data.bio;
+        loadPosts(data.username); 
+    });
 
-    // จัดการรูป Profile
     if (fileInput && profilePic) {
         const savedPic = localStorage.getItem(STORAGE_KEY_PIC);
         if (savedPic) profilePic.style.backgroundImage = `url('${savedPic}')`;
@@ -36,51 +29,80 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // ปุ่ม Chat Link
     const chatButton = document.querySelector('.chat-button');
     if (chatButton) chatButton.onclick = () => window.location.href = 'index.html';
+
+    // 2. Search Logic (ส่วนสำคัญ: จับการพิมพ์ในช่องค้นหา)
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            const text = e.target.value.trim();
+            const myNameEl = document.querySelector('.username');
+            const myName = myNameEl ? myNameEl.innerText : '';
+
+            if (text.length > 0) {
+                // ถ้ามีข้อความ ให้ค้นหา
+                searchPosts(text);
+            } else {
+                // ถ้าลบข้อความหมด ให้โหลดโพสต์ทั้งหมดกลับมา
+                loadPosts(myName);
+            }
+        });
+    }
 });
 
-// ==========================================
-// ส่วนจัดการ Feed และ Post
-// ==========================================
-
+// ฟังก์ชันโหลดโพสต์ทั้งหมด (ปกติ)
 async function loadPosts(currentUsername) {
     const feedContainer = document.querySelector('.feed');
     try {
         const response = await fetch('/get-posts');
         const posts = await response.json();
 
-        // 1. นับจำนวนโพสต์ของเรา
+        // นับจำนวนโพสต์
         const myPostsCount = posts.filter(p => p.username === currentUsername).length;
         const countElements = document.querySelectorAll('.count');
         if (countElements.length > 0) countElements[0].innerText = myPostsCount;
 
-        // (ถ้าต้องการล้างโพสต์ตัวอย่างเก่าออก ให้ uncomment บรรทัดล่างนี้)
-        // feedContainer.innerHTML = ''; 
-
-        // 2. แสดงโพสต์ (เรียงจากใหม่ไปเก่า)
+        // ล้างหน้าจอแล้วใส่โพสต์
+        feedContainer.innerHTML = ''; 
         posts.forEach(post => {
             const postElement = createPostHTML(post);
-            feedContainer.prepend(postElement); 
+            feedContainer.appendChild(postElement); // ใช้ appendChild เพราะ Server เรียงมาให้แล้ว
         });
     } catch (err) { console.error("Error loading posts:", err); }
+}
+
+// ฟังก์ชันค้นหาโพสต์ (ใหม่)
+async function searchPosts(keyword) {
+    const feedContainer = document.querySelector('.feed');
+    try {
+        // ส่งคำค้นหาไปที่ Server
+        const response = await fetch(`/search-posts?q=${encodeURIComponent(keyword)}`);
+        const posts = await response.json();
+
+        feedContainer.innerHTML = ''; // ล้างหน้าจอ
+
+        if (posts.length === 0) {
+            feedContainer.innerHTML = '<p style="text-align:center; padding:20px; color:#aaa;">No posts found.</p>';
+            return;
+        }
+
+        posts.forEach(post => {
+            const postElement = createPostHTML(post);
+            feedContainer.appendChild(postElement);
+        });
+    } catch (err) { console.error(err); }
 }
 
 function createPostHTML(post) {
     const div = document.createElement('div');
     div.className = 'post';
 
-    // จัดรูปแบบเวลา
     const dateOptions = { hour: 'numeric', minute: 'numeric', day: 'numeric', month: 'short' };
     const timeString = new Date(post.time_posted).toLocaleDateString('en-US', dateOptions);
-
-    // จัดการ Path รูปภาพ (เปลี่ยน \ เป็น / เพื่อกัน Error)
     const rawImagePath = post.image_path || '';
     const safeImagePath = rawImagePath.replace(/\\/g, '/');
     const imageStyle = safeImagePath ? `background-image: url('${safeImagePath}');` : 'display: none;';
-
-    // ดึงรูปโปรไฟล์จริงของเรามาใช้ใน header ของโพสต์
     let userProfilePic = localStorage.getItem('serverProfilePicUrl') || 'https://via.placeholder.com/40';
 
     div.innerHTML = `
@@ -102,17 +124,13 @@ function createPostHTML(post) {
     return div;
 }
 
-// ==========================================
-// ส่วนจัดการ Comment Modal
-// ==========================================
+// --- Comment Modal Logic ---
 const modal = document.getElementById('comment-modal');
 const closeModal = document.querySelector('.close-modal');
 let currentPostId = null;
 
 async function openCommentModal(postId, imageUrl, ownerName, ownerPicUrl) {
     currentPostId = postId;
-    
-    // ตั้งค่ารูปโพสต์และข้อมูลเจ้าของโพสต์ใน Modal
     const modalImg = document.getElementById('modal-post-image');
     if (imageUrl) {
         modalImg.src = imageUrl;
@@ -122,46 +140,31 @@ async function openCommentModal(postId, imageUrl, ownerName, ownerPicUrl) {
         modalImg.style.display = 'none';
         document.querySelector('.modal-left').style.display = 'none';
     }
-
     document.getElementById('modal-owner-name').innerText = ownerName;
     document.getElementById('modal-owner-pic').src = ownerPicUrl;
-    document.getElementById('comments-list').innerHTML = ''; // ล้างแชทเก่า
-
+    document.getElementById('comments-list').innerHTML = '';
+    
     modal.style.display = 'flex';
     loadComments(postId);
 }
 
-// ฟังก์ชันโหลดคอมเมนต์ (แก้ไขให้รองรับภาษาไทย + รูปจริง)
 async function loadComments(postId) {
     const list = document.getElementById('comments-list');
-    
-    // ดึงชื่อและรูปจริงของเราเตรียมไว้
     const myNameEl = document.querySelector('.username');
     const myName = myNameEl ? myNameEl.innerText : 'Guest';
     let myPic = localStorage.getItem('serverProfilePicUrl');
-    // ถ้าไม่มีรูปจริง ให้สร้างรูปจากชื่อตัวเอง
     if (!myPic) myPic = `https://ui-avatars.com/api/?name=${encodeURIComponent(myName)}&background=random&color=fff`;
 
     try {
         const res = await fetch(`/get-comments/${postId}`);
         const comments = await res.json();
-        
-        list.innerHTML = ''; 
-        
+        list.innerHTML = '';
         comments.forEach(c => {
             const item = document.createElement('div');
             item.className = 'comment-item';
-            
             let avatarUrl;
-            
-            // เช็คว่าใครเป็นคนคอมเมนต์
-            if (c.username === myName) {
-                // ถ้าเป็นเรา -> ใช้รูปโปรไฟล์จริง
-                avatarUrl = myPic;
-            } else {
-                // ถ้าเป็นคนอื่น -> สร้างรูปจากชื่อ (ใช้ ui-avatars รองรับภาษาไทยได้ดี)
-                avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(c.username)}&background=random&color=fff&size=128`;
-            }
+            if (c.username === myName) avatarUrl = myPic;
+            else avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(c.username)}&background=random&color=fff&size=128`;
 
             item.innerHTML = `
                 <img src="${avatarUrl}" class="avatar-small" style="object-fit: cover;">
@@ -173,13 +176,10 @@ async function loadComments(postId) {
             `;
             list.appendChild(item);
         });
-        
-        list.scrollTop = list.scrollHeight; // เลื่อนลงล่างสุด
-        
+        list.scrollTop = list.scrollHeight;
     } catch (err) { console.error(err); }
 }
 
-// ปุ่มส่งคอมเมนต์
 document.getElementById('submit-comment-btn').addEventListener('click', async () => {
     const input = document.getElementById('comment-input');
     const text = input.value.trim();
@@ -189,22 +189,14 @@ document.getElementById('submit-comment-btn').addEventListener('click', async ()
     const nameEl = document.querySelector('.username'); 
     if (nameEl) myName = nameEl.innerText;
 
-    try {
-        await fetch('/add-comment', {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ postId: currentPostId, username: myName, text: text })
-        });
-        
-        input.value = ''; 
-        loadComments(currentPostId); // โหลดคอมเมนต์ใหม่ทันที
-    } catch (err) { console.error("Error posting comment:", err); }
+    await fetch('/add-comment', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ postId: currentPostId, username: myName, text: text })
+    });
+    input.value = ''; 
+    loadComments(currentPostId);
 });
 
-// ปิด Modal
-if (closeModal) {
-    closeModal.addEventListener('click', () => { modal.style.display = 'none'; });
-}
-window.onclick = function(event) {
-    if (event.target == modal) modal.style.display = 'none';
-}
+if (closeModal) closeModal.addEventListener('click', () => { modal.style.display = 'none'; });
+window.onclick = function(event) { if (event.target == modal) modal.style.display = 'none'; }

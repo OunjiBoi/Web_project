@@ -9,16 +9,12 @@
 
 <body>
     <div class="container">
-
         <aside class="left-sidebar">
             <div class="profile-card">
                 <label for="profile-upload" class="profile-upload-area">
-                    <div id="current-profile-pic" class="profile-pic" 
-                         style="background-image: url('placeholder-profile-george.jpg');"></div>
-
+                    <div id="current-profile-pic" class="profile-pic" style="background-image: url('placeholder-profile-george.jpg');"></div>
                     <input type="file" id="profile-upload" accept="image/*" style="display:none;">
                 </label>
-
                 <h2 class="username">George Boonmee</h2>
                 <div class="stats">
                     <p><span class="count">2</span> Posts</p>
@@ -26,23 +22,19 @@
                 </div>
                 <p class="bio">Hello My name is George nice to meet you</p>
             </div>
-
             <nav class="settings-nav">
                 <a href="setting.html"><span class="icon">⚙️</span> Setting</a>
                 <a href="#"><span class="icon">➡️</span> Logout</a>
             </nav>
-
-            <button class="chat-button">
-                CHAT
-            </button>
+            <button class="chat-button">CHAT</button>
         </aside>
 
         <main class="main-content">
             <header class="top-bar">
                 <h1 class="logo">FaceBUG</h1>
-
+                
                 <div class="search-box">
-                    <input type="text" placeholder="🔍 Search">
+                    <input type="text" id="search-input" placeholder="🔍 Search">
                 </div>
 
                 <div class="actions">
@@ -57,29 +49,19 @@
 
         <aside class="right-sidebar">
             <h3>Friends</h3>
-
             <ul class="friends-list">
                 <li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>Yourself</span></li>
                 <li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>Black</span></li>
-                <li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>Chocolate</span></li>
-                <li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>Nico</span></li>
-                <li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>Jarlet</span></li>
-                <li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>John</span></li>
-                <li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>Jack</span></li>
-                <li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>Max</span></li>
             </ul>
         </aside>
-
     </div>
 
     <div id="comment-modal" class="modal-overlay">
         <div class="modal-content">
             <span class="close-modal">&times;</span>
-            
             <div class="modal-left">
                 <img id="modal-post-image" src="" alt="Post Image">
             </div>
-
             <div class="modal-right">
                 <div class="modal-header">
                     <div class="user-info">
@@ -87,15 +69,10 @@
                         <span id="modal-owner-name" class="username-bold">Username</span>
                     </div>
                 </div>
-
-                <div class="comments-list" id="comments-list">
-                    </div>
-
+                <div class="comments-list" id="comments-list"></div>
                 <div class="modal-footer">
                     <div class="action-icons"><span>❤️</span> <span>📤</span></div>
-                    
                     <div class="like-count">512 Likes</div>
-                    
                     <div class="comment-input-area">
                         <input type="text" id="comment-input" placeholder="Add a comment...">
                         <button id="submit-comment-btn">Post</button>

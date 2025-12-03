@@ -241,3 +241,13 @@ app.post('/add-comment', (req, res) => {
 app.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
 });
+
+app.get('/search-posts', (req, res) => {
+    const searchTerm = req.query.q;
+    const sql = "SELECT * FROM posts WHERE content LIKE ? OR username LIKE ? ORDER BY time_posted DESC";
+    const query = `%${searchTerm}%`;
+    db.query(sql, [query, query], (err, results) => {
+        if (err) return res.json([]);
+        res.json(results);
+    });
+});
