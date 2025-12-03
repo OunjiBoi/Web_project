@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FaceBUG Chat UI</title>
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> </head>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet"> 
+</head>
 <body>
     <div class="chat-container">
         <div class="sidebar">
@@ -19,22 +20,25 @@
             </div>
             
             <h2>Messages</h2>
-            
             </div>
         
         <div class="chat-area">
             <div class="chat-header">
-                <img src="placeholder-avatar.png" alt="Black Panther" class="avatar">
-                <span class="contact-name" id="contact-name">Black Panther</span>
+                <img src="https://via.placeholder.com/40" alt="Avatar" class="avatar">
+                <span class="contact-name" id="contact-name">Chat Room</span>
                 <span class="material-icons info-icon">info</span>
             </div>
             
             <div class="chat-messages" id="chat-messages-container">
-            </div>
+                </div>
             
             <div class="chat-input">
                 <div class="input-icons">
-                    <span class="material-icons icon">image</span>
+                    <label for="chat-image-input" style="cursor: pointer; display: flex; align-items: center;">
+                        <span class="material-icons icon">image</span>
+                    </label>
+                    <input type="file" id="chat-image-input" accept="image/*" style="display: none;">
+                    
                     <span class="material-icons icon">sentiment_satisfied_alt</span> 
                 </div>
                 <input type="text" placeholder="Message..." id="message-input-field"> 

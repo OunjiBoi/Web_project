@@ -168,15 +168,13 @@
 
 
 
-
-
 window.onload = pageLoad;
 var username = "George"; // ค่าเริ่มต้น
 var timer = null;
 const CHAT_CONTAINER_ID = "chat-messages-container";
 
 async function pageLoad() {
-    // ดึงชื่อผู้ใช้ล่าสุดจาก Database ก่อนเริ่มแชท
+    // ดึงชื่อผู้ใช้
     try {
         let res = await fetch('/get-profile');
         let data = await res.json();
@@ -200,6 +198,29 @@ async function pageLoad() {
             if (e.key === "Enter") { e.preventDefault(); sendMsg(); }
         });
     }
+
+    // --- ส่วนเพิ่มใหม่: จัดการอัปโหลดรูปในแชท ---
+    const chatImageInput = document.getElementById('chat-image-input');
+    if (chatImageInput) {
+        chatImageInput.addEventListener('change', async (e) => {
+            if (e.target.files.length > 0) {
+                const formData = new FormData();
+                formData.append('chatImage', e.target.files[0]);
+
+                try {
+                    // 1. อัปโหลดรูปไป Server
+                    const res = await fetch('/upload-chat-image', { method: 'POST', body: formData });
+                    if (res.ok) {
+                        const data = await res.json();
+                        // 2. ส่งข้อความเป็น HTML Tag <img> เพื่อให้แสดงรูป
+                        writeLog(`<img src="${data.imageUrl}" class="chat-uploaded-image">`);
+                    }
+                } catch (err) { console.error(err); }
+                e.target.value = ''; // ล้างค่าเพื่อให้เลือกรูปเดิมซ้ำได้
+            }
+        });
+    }
+    // ------------------------------------------
 
     readLog();
     timer = setInterval(loadLog, 3000);
@@ -249,9 +270,6 @@ function postMsg(msg) {
     if (!x) return;
 
     let messages = Array.isArray(msg) ? msg : Object.values(msg);
-    
-    // รีเฟรชเฉพาะเมื่อจำนวนข้อความเปลี่ยน หรือเพื่ออัปเดตการแก้ไข
-    // (ในที่นี้ล้างใหม่หมดเพื่อให้แสดงผลการแก้ไขทันที)
     x.innerHTML = ""; 
 
     for (let item of messages) {
@@ -260,18 +278,21 @@ function postMsg(msg) {
 
         let content = document.createElement("div");
         content.className = "message-content";
-        content.innerHTML = item.message;
+        content.innerHTML = item.message; // ตรงนี้จะ render <img> ถ้ามี tag html
 
-        // --- Logic คลิกแก้ไข ---
+        // Logic คลิกแก้ไข (เฉพาะข้อความตัวอักษร)
         if (item.user === username) {
-            content.style.cursor = "pointer";
-            content.title = "Click to edit";
-            content.onclick = () => {
-                let newText = prompt("Edit your message:", item.message);
-                if (newText && newText.trim() !== "" && newText !== item.message) {
-                    editMessage(item.id, newText);
-                }
-            };
+            // เช็คว่าไม่ใช่รูปภาพถึงจะให้แก้ได้
+            if (!item.message.includes('<img')) {
+                content.style.cursor = "pointer";
+                content.title = "Click to edit";
+                content.onclick = () => {
+                    let newText = prompt("Edit your message:", item.message);
+                    if (newText && newText.trim() !== "" && newText !== item.message) {
+                        editMessage(item.id, newText);
+                    }
+                };
+            }
         }
         
         let time = document.createElement("span");
@@ -288,8 +309,7 @@ function postMsg(msg) {
         }
         x.appendChild(div);
     }
-    // Auto scroll ถ้าอยู่ล่างสุด
-    if (x.scrollHeight - x.scrollTop <= x.clientHeight + 100) {
+    if (x.scrollHeight - x.scrollTop <= x.clientHeight + 200) {
         x.scrollTop = x.scrollHeight;
     }
 }

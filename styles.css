@@ -388,3 +388,18 @@ body {
     color: #ff9800; 
     cursor: pointer;
 }
+
+/* upload รูป */
+.chat-uploaded-image {
+    max-width: 100%;       /* ไม่ให้เกินกล่องข้อความ */
+    max-height: 250px;     /* จำกัดความสูง */
+    border-radius: 10px;
+    margin-top: 5px;
+    display: block;
+    object-fit: cover;
+}
+
+.message-content:has(.chat-uploaded-image) {
+    background-color: transparent !important; 
+    padding: 0;
+}
