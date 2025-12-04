@@ -1,0 +1,51 @@
+{
+	"name": "username",
+	"version": "7.0.0",
+	"description": "Get the username of the current user",
+	"license": "MIT",
+	"repository": "sindresorhus/username",
+	"funding": "https://github.com/sponsors/sindresorhus",
+	"author": {
+		"name": "Sindre Sorhus",
+		"email": "sindresorhus@gmail.com",
+		"url": "https://sindresorhus.com"
+	},
+	"type": "module",
+	"exports": {
+		"types": "./index.d.ts",
+		"default": "./index.js"
+	},
+	"sideEffects": false,
+	"engines": {
+		"node": ">=18"
+	},
+	"scripts": {
+		"test": "xo && ava && tsd"
+	},
+	"files": [
+		"index.js",
+		"index.d.ts"
+	],
+	"keywords": [
+		"username",
+		"user",
+		"login",
+		"name",
+		"logname",
+		"lname",
+		"whoami",
+		"shell",
+		"env",
+		"environment",
+		"variable"
+	],
+	"dependencies": {
+		"execa": "^8.0.1",
+		"memoize": "^10.0.0"
+	},
+	"devDependencies": {
+		"ava": "^5.3.1",
+		"tsd": "^0.29.0",
+		"xo": "^0.56.0"
+	}
+}
