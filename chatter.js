@@ -17,12 +17,12 @@
 //     }
 	
 //     // 3. ตั้งค่าปุ่มย้อนกลับ (Back Arrow) ให้กลับไปหน้า Feed
-//     var backButton = document.querySelector(".back-arrow");
-//     if (backButton) {
-//         backButton.onclick = function() {
-//             window.location.href = "feed.html"; 
-//         };
-//     }
+    var backButton = document.querySelector(".back-arrow");
+    if (backButton) {
+        backButton.onclick = function() {
+            window.location.href = "feed.html"; 
+        };
+    }
 
 //     // 4. ตั้งค่า Enter Key สำหรับช่องพิมพ์
 //     var inputField = document.getElementById("message-input-field");
