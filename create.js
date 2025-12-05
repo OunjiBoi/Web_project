@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (response.ok) {
                 alert('Post created!');
-                window.location.href = 'feed.html'; // กลับไปหน้า Feed
+                window.location.href = 'index.html'; // กลับไปหน้า Feed
             } else {
                 alert('Failed to create post');
             }

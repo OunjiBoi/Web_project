@@ -7,13 +7,13 @@ var path = require('path');
 var mysql = require('mysql2');
 var multer = require('multer');
 
-// เพิ่มส่วนนี้สำหรับ Socket.ioและ HTTP Server
-var http = require('http'); // ใช้สำหรับรวม Express กับ Socket.io
-var socketio = require('socket.io');
+// // เพิ่มส่วนนี้สำหรับ Socket.ioและ HTTP Server
+// var http = require('http'); // ใช้สำหรับรวม Express กับ Socket.io
+// var socketio = require('socket.io');
 
-//สร้าง HTTP Server และเชื่อมต่อ Socket.io
-var server = http.createServer(app);
-var io = socketio(server);
+// //สร้าง HTTP Server และเชื่อมต่อ Socket.io
+// var server = http.createServer(app);
+// var io = socketio(server);
 
 var hostname = 'localhost';
 var port = 3001;
