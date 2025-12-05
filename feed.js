@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const chatButton = document.querySelector('.chat-button');
-    if (chatButton) chatButton.onclick = () => window.location.href = 'index.html';
+    if (chatButton) chatButton.onclick = () => window.location.href = 'chats.html';
 
     // 2. Search Logic (ส่วนสำคัญ: จับการพิมพ์ในช่องค้นหา)
     const searchInput = document.getElementById('search-input');
