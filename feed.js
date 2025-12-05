@@ -4,12 +4,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const profilePic = document.getElementById('current-profile-pic');
     const STORAGE_KEY_PIC = 'serverProfilePicUrl'; 
 
-    fetch('/get-profile').then(res => res.json()).then(data => {
-        document.querySelectorAll('.username').forEach(el => el.innerText = data.username);
-        const bioEl = document.querySelector('.bio');
-        if (bioEl) bioEl.innerText = data.bio;
-        loadPosts(data.username); 
-    });
+    // fetch('/get-profile').then(res => res.json()).then(data => {
+    //     document.querySelectorAll('.username').forEach(el => el.innerText = data.username);
+    //     const bioEl = document.querySelector('.bio');
+    //     if (bioEl) bioEl.innerText = data.bio;
+    //     loadPosts(data.username); 
+    // });
+
+    // 1. ดึง Username จาก Local Storage
+    const loggedInUser = localStorage.getItem('currentUser');
+    
+    if (!loggedInUser) {
+        // ถ้าไม่พบข้อมูลผู้ใช้ (ถือว่ายังไม่ล็อกอิน) ให้เด้งกลับไปหน้า Login
+        alert('Please log in first.');
+        // **ปรับชื่อไฟล์ 'login.html' ให้ตรงกับชื่อไฟล์ Login ของคุณ**
+        window.location.href = 'login.html'; 
+        return; // หยุดการทำงานต่อ
+    }
+    
+    // 2. นำ Username มาแสดงผลบนหน้า Feed (แทนที่ชื่อเดิม)
+    document.querySelectorAll('.username').forEach(el => el.innerText = loggedInUser);
+    
+    // 3. ตั้งค่า Bio และ Load Post
+    const bioEl = document.querySelector('.bio');
+    // ตั้ง Bio ให้เป็นชื่อผู้ใช้ที่ล็อกอิน
+    if (bioEl) bioEl.innerText = 'Hello My name is ' + loggedInUser + ' nice to meet you'; 
+    loadPosts(loggedInUser); // ส่งชื่อผู้ใช้ไปให้ฟังก์ชันโหลดโพสต์
 
     if (fileInput && profilePic) {
         const savedPic = localStorage.getItem(STORAGE_KEY_PIC);
