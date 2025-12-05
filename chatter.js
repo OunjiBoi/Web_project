@@ -1,170 +1,315 @@
-window.onload = pageLoad;
-var username= "";
-var timer = null;
-const CHAT_CONTAINER_ID = "chat-messages-container"; // ID ใหม่ที่จะใช้ใน HTML
+// window.onload = pageLoad;
+// var username= "Me"; // ตั้งชื่อผู้ใช้เริ่มต้น (แก้ได้ตามต้องการ)
+// var timer = null;
+// const CHAT_CONTAINER_ID = "chat-messages-container"; 
 
-function pageLoad(){
-	// ตั้งค่าปุ่มส่งข้อความ
-	var x = document.getElementById("send-msg-button");
-	if (x) {
-        x.onclick = sendMsg;
-    }
-    
-	// ตั้งค่าปุ่มตกลง (สำหรับการตั้งชื่อผู้ใช้ในตัวอย่างที่สมบูรณ์)
-	// เนื่องจากไม่มี element 'clickok' และ 'userInput' ใน index.html ปัจจุบัน
-	// จึงตัดส่วน setUsername และ element ที่เกี่ยวข้องออกไป และเรียก readLog ทันที
-    
-    // ตั้งค่าผู้ใช้เริ่มต้นเป็น 'Admin' หรือ 'Me'
-    username = "Me"; // ตั้งชื่อผู้ใช้เริ่มต้น
-    document.getElementById("contact-name").innerHTML = "Contact Name"; // ชื่อผู้ติดต่อใน Header (หากมี element)
+// function pageLoad(){
+// 	// 1. ตั้งค่าปุ่มส่งข้อความ
+// 	var x = document.getElementById("send-msg-button");
+// 	if (x) {
+//         x.onclick = sendMsg;
+//     }
+
+//     // 2. ตั้งค่าชื่อใน Header
+//     var contactName = document.getElementById("contact-name");
+//     if (contactName) {
+//         contactName.innerHTML = "Contact Name"; 
+//     }
 	
-	// เริ่มโหลดข้อความอัตโนมัติ
-	timer = setInterval (loadLog, 3000); //Reload file every 3000 ms
-	readLog();
+//     // 3. ตั้งค่าปุ่มย้อนกลับ (Back Arrow) ให้กลับไปหน้า Feed
+//     var backButton = document.querySelector(".back-arrow");
+//     if (backButton) {
+//         backButton.onclick = function() {
+//             window.location.href = "feed.html"; 
+//         };
+//     }
+
+//     // 4. ตั้งค่า Enter Key สำหรับช่องพิมพ์
+//     var inputField = document.getElementById("message-input-field");
+//     if (inputField) {
+//         inputField.addEventListener("keypress", function(event) {
+//             if (event.key === "Enter") {
+//                 event.preventDefault();
+//                 sendMsg();
+//             }
+//         });
+//     }
+
+// 	// 5. เริ่มโหลดข้อความ
+//     // เรียก readLog() ได้แล้ว เพราะเราแก้เป็น function ด้านล่างแล้ว
+// 	readLog(); 
+// 	timer = setInterval (loadLog, 3000); 
+// }
+
+// function loadLog(){
+// 	readLog();
+// }
+
+// function sendMsg(){
+// 	var inputField = document.getElementById("message-input-field");
+// 	var text = inputField.value.trim();
+//     if (text === "") {
+//         return; 
+//     }
+// 	inputField.value = ""; 
+// 	writeLog(text);
+// }
+
+// // --- ส่วนที่แก้ไข: เปลี่ยนจาก const ... = async () => เป็น async function ... ---
+
+// async function writeLog(msg) {
+// 	let d = new Date();
+// 	const messageData = {
+// 		time: d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }),
+// 		user: username,
+// 		message: msg
+// 	};
+
+// 	try {
+// 		await fetch("/outmsg", {
+// 			method: "POST",
+// 			headers: {
+// 				'Accept': 'application/json',
+// 				'Content-Type': 'application/json'
+// 			},
+// 			body: JSON.stringify(messageData)
+// 		});
+//         readLog(); // โหลดข้อความใหม่ทันทีหลังส่ง
+// 	} catch (err) {
+// 		console.error("Failed to send message", err);
+// 	}
+// }
+
+// async function readLog() {
+// 	try{
+// 		let response = await fetch("/inmsg");
+// 		let data = await response.json();
+// 		postMsg(data);
+// 	} catch (err){
+// 		console.error("Failed to read log", err);
+// 	}
+// }
+
+// // --------------------------------------------------------------------------
+
+// function postMsg(msg){
+// 	var x = document.getElementById(CHAT_CONTAINER_ID);
+//     if (!x) return;
     
-    // ตั้งค่า Enter Key สำหรับช่องพิมพ์ข้อความ
-    var inputField = document.getElementById("message-input-field");
-    if (inputField) {
-        inputField.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                sendMsg();
+//     // แปลงผลลัพธ์จาก Database (Array) หรือ JSON (Object) ให้เป็น Array
+//     let messages = [];
+//     if (Array.isArray(msg)) {
+//         messages = msg;
+//     } else {
+//         // กรณีเผื่อไว้สำหรับ JSON แบบเก่า (Object)
+//         messages = Object.values(msg);
+//     }
+    
+//     // เช็คจำนวนข้อความเพื่อดูว่าต้องอัปเดตไหม
+//     const existingMessagesCount = x.children.length;
+    
+//     if (messages.length !== existingMessagesCount) {
+//         // ล้างข้อความเก่า
+//         while(x.firstChild){
+//             x.removeChild(x.lastChild);
+//         }
+        
+//         // วนลูปสร้างข้อความ
+//         for (var item of messages){
+            
+//             var div_d = document.createElement("div");
+//             div_d.className = "message";
+            
+//             // เช็คว่าเป็นข้อความเราหรือไม่
+//             const isSent = item.user === username;
+//             div_d.classList.add(isSent ? "sent" : "received");
+            
+//             // เนื้อหาข้อความ
+//             var content = document.createElement("div");
+//             content.className = "message-content";
+            
+//             if (isSent && item.message === "Hello mister Black!") {
+//                  content.classList.add("outgoing-highlight");
+//             }
+//             content.innerHTML = item.message; 
+            
+//             // เวลา
+//             var timestamp = document.createElement("span");
+//             timestamp.className = "timestamp";
+//             timestamp.textContent = item.time;
+            
+//             // จัดเรียง
+//             if (isSent) {
+//                 div_d.append(content, timestamp); 
+//             } else {
+//                 var avatar = document.createElement("img");
+//                 avatar.className = "avatar";
+//                 avatar.src = "https://via.placeholder.com/30/333333/FFFFFF?text=" + (item.user ? item.user.charAt(0) : "?");
+                
+//                 div_d.append(avatar, content, timestamp);
+//             }
+            
+//             x.appendChild(div_d);
+//         }
+//         checkScroll();
+//     }
+// }
+
+// function checkScroll(){
+// 	var chatbox = document.getElementById(CHAT_CONTAINER_ID);
+//     if (chatbox) {
+//         var isAtBottom = chatbox.scrollTop + chatbox.clientHeight >= chatbox.scrollHeight - 50;
+//         if (!isAtBottom) {
+//             chatbox.scrollTop = chatbox.scrollHeight;
+//         }
+//     }
+// }
+
+
+
+
+window.onload = pageLoad;
+var username = "George"; // ค่าเริ่มต้น
+var timer = null;
+const CHAT_CONTAINER_ID = "chat-messages-container";
+
+async function pageLoad() {
+    // ดึงชื่อผู้ใช้
+    try {
+        let res = await fetch('/get-profile');
+        let data = await res.json();
+        if (data.username) username = data.username;
+    } catch (e) { console.error(e); }
+
+    document.getElementById("contact-name").innerHTML = "Chat Room";
+
+    // ปุ่ม Back
+    const backBtn = document.querySelector(".back-arrow");
+    if (backBtn) backBtn.onclick = () => window.location.href = "feed.html";
+
+    // ปุ่ม Send
+    const sendBtn = document.getElementById("send-msg-button");
+    if (sendBtn) sendBtn.onclick = sendMsg;
+
+    // ปุ่ม Enter
+    const input = document.getElementById("message-input-field");
+    if (input) {
+        input.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") { e.preventDefault(); sendMsg(); }
+        });
+    }
+
+    // --- ส่วนเพิ่มใหม่: จัดการอัปโหลดรูปในแชท ---
+    const chatImageInput = document.getElementById('chat-image-input');
+    if (chatImageInput) {
+        chatImageInput.addEventListener('change', async (e) => {
+            if (e.target.files.length > 0) {
+                const formData = new FormData();
+                formData.append('chatImage', e.target.files[0]);
+
+                try {
+                    // 1. อัปโหลดรูปไป Server
+                    const res = await fetch('/upload-chat-image', { method: 'POST', body: formData });
+                    if (res.ok) {
+                        const data = await res.json();
+                        // 2. ส่งข้อความเป็น HTML Tag <img> เพื่อให้แสดงรูป
+                        writeLog(`<img src="${data.imageUrl}" class="chat-uploaded-image">`);
+                    }
+                } catch (err) { console.error(err); }
+                e.target.value = ''; // ล้างค่าเพื่อให้เลือกรูปเดิมซ้ำได้
             }
         });
     }
+    // ------------------------------------------
+
+    readLog();
+    timer = setInterval(loadLog, 3000);
 }
 
-function loadLog(){
-	readLog();
+function loadLog() { readLog(); }
+
+function sendMsg() {
+    var input = document.getElementById("message-input-field");
+    var text = input.value.trim();
+    if (!text) return;
+    input.value = "";
+    writeLog(text);
 }
 
-function sendMsg(){
-	//get msg
-	var inputField = document.getElementById("message-input-field");
-	var text = inputField.value.trim();
-    if (text === "") {
-        return; // ไม่ส่งข้อความว่างเปล่า
-    }
-	inputField.value = ""; // เคลียร์ช่องข้อความ
-	writeLog(text);
+async function writeLog(msg) {
+    let d = new Date();
+    let timeStr = d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    
+    await fetch("/outmsg", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ time: timeStr, user: username, message: msg })
+    });
+    readLog();
 }
 
-//ทำให้สมบูรณ์
-const writeLog = (async (msg) => {
-	let d = new Date();
-	// สร้าง JS object ที่เก็บข้อมูลของข้อความ
-	const messageData = {
-		time: d.toLocaleString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true }),
-		user:username,
-		message:msg
-	};
+async function editMessage(id, newMsg) {
+    await fetch("/editmsg", {
+        method: "POST",
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: id, message: newMsg })
+    });
+    readLog();
+}
 
-	// ส่งข้อมูลไปที่ Server ด้วย Fetch API และ Method POST
-	try {
-		await fetch("/outmsg", {
-			method: "POST",
-			headers: {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json'
-			},
-			body: JSON.stringify(messageData)
-		});
-        // โหลด log ใหม่ทันทีหลังจากส่งข้อความสำเร็จ
-        readLog(); 
-	} catch (err) {
-		console.error("Failed to send message", err);
-	}
-});
+async function readLog() {
+    try {
+        let res = await fetch("/inmsg");
+        let data = await res.json();
+        postMsg(data);
+    } catch (e) { console.error(e); }
+}
 
-//ทำให้สมบูรณ์
-const readLog = (async () => {
-	try{
-		let response = await fetch("/inmsg");
-		let data = await response.json();
-		postMsg(data);
-	} catch (err){
-		console.error("Failed to read log", err);
-	}
-})
-
-// รับ msg ที่เป็น JS object ที่อ่านมาได้จาก file
-function postMsg(msg){
-	var x = document.getElementById(CHAT_CONTAINER_ID);
+function postMsg(msg) {
+    var x = document.getElementById(CHAT_CONTAINER_ID);
     if (!x) return;
-    
-	// ใช้ for loop ในการวนลูปเพื่อสร้าง element และแสดงข้อความที่อ่านมา
-	let keys = Object.keys(msg);
-    // เก็บข้อความเดิมก่อนการแสดงผลใหม่
-    const existingMessages = x.children.length;
-    
-    // ถ้าจำนวนข้อความไม่เท่ากัน แสดงว่ามีข้อความใหม่ (หรือเพิ่งโหลดครั้งแรก)
-    if (keys.length !== existingMessages) {
-        // ล้างข้อความเดิมทั้งหมด
-        while(x.firstChild){
-            x.removeChild(x.lastChild);
+
+    let messages = Array.isArray(msg) ? msg : Object.values(msg);
+    x.innerHTML = ""; 
+
+    for (let item of messages) {
+        let div = document.createElement("div");
+        div.className = "message " + (item.user === username ? "sent" : "received");
+
+        let content = document.createElement("div");
+        content.className = "message-content";
+        content.innerHTML = item.message; // ตรงนี้จะ render <img> ถ้ามี tag html
+
+        // Logic คลิกแก้ไข (เฉพาะข้อความตัวอักษร)
+        if (item.user === username) {
+            // เช็คว่าไม่ใช่รูปภาพถึงจะให้แก้ได้
+            if (!item.message.includes('<img')) {
+                content.style.cursor = "pointer";
+                content.title = "Click to edit";
+                content.onclick = () => {
+                    let newText = prompt("Edit your message:", item.message);
+                    if (newText && newText.trim() !== "" && newText !== item.message) {
+                        editMessage(item.id, newText);
+                    }
+                };
+            }
         }
         
-        for (var i of keys){
-            var item = msg[i];
-            
-            // 1. สร้าง div message
-            var div_d = document.createElement("div");
-            div_d.className = "message";
-            
-            // ตรวจสอบว่าใครเป็นผู้ส่ง
-            const isSent = item.user === username;
-            div_d.classList.add(isSent ? "sent" : "received");
-            
-            // 2. สร้าง bubble/message-content
-            var content = document.createElement("div");
-            content.className = "message-content";
-            
-            // ตรวจสอบข้อความพิเศษสำหรับไฮไลท์
-            if (isSent && item.message === "Hello mister Black!") {
-                 content.classList.add("outgoing-highlight");
-            }
-            
-            content.innerHTML = item.message; // ใส่ข้อความ
-            
-            // 3. สร้าง timestamp
-            var timestamp = document.createElement("span");
-            timestamp.className = "timestamp";
-            timestamp.textContent = item.time;
-            
-            // 4. จัดเรียง element ภายใน div_d
-            if (isSent) {
-                // Sent: [Content] [Timestamp]
-                div_d.append(content, timestamp); 
-            } else {
-                // Received: [Avatar Placeholder] [Content] [Timestamp]
-                // ใน styles.css กำหนดให้ avatar ใน message.sent เป็น display: none;
-                // แต่ในโค้ดนี้จะใช้การ append เฉพาะด้าน received เท่านั้น
-                
-                // Avatar Placeholder (เนื่องจาก index.html ไม่มีรูปภาพจริงๆ)
-                var avatar = document.createElement("img");
-                avatar.className = "avatar";
-                // สามารถใส่ src จริงได้หากมี
-                avatar.src = "https://via.placeholder.com/30/333333/FFFFFF?text=" + item.user.charAt(0);
-                
-                div_d.append(avatar, content, timestamp);
-            }
-            
-            x.appendChild(div_d);
+        let time = document.createElement("span");
+        time.className = "timestamp";
+        time.innerText = item.time;
+
+        if (item.user === username) {
+            div.append(content, time);
+        } else {
+            let avatar = document.createElement("img");
+            avatar.className = "avatar";
+            avatar.src = "https://via.placeholder.com/30?text=" + (item.user ? item.user.charAt(0) : "?");
+            div.append(avatar, content, time);
         }
-        checkScroll();
+        x.appendChild(div);
     }
-}
-
-
-function checkScroll(){
-	var chatbox = document.getElementById(CHAT_CONTAINER_ID);
-    if (chatbox) {
-        // ตรวจสอบว่ามีการ Scroll อยู่ที่ด้านล่างแล้วหรือไม่
-        var isAtBottom = chatbox.scrollTop + chatbox.clientHeight >= chatbox.scrollHeight - 1; // ใช้ -1 เพื่อเผื่อ floating point error
-        
-        // ถ้าไม่ถึงด้านล่าง หรือ ถ้ามีการโหลดข้อความใหม่ ให้เลื่อนลงไปด้านล่าง
-        if (!isAtBottom) {
-            chatbox.scrollTop = chatbox.scrollHeight;
-        }
+    if (x.scrollHeight - x.scrollTop <= x.clientHeight + 200) {
+        x.scrollTop = x.scrollHeight;
     }
 }
