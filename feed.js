@@ -4,32 +4,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const profilePic = document.getElementById('current-profile-pic');
     const STORAGE_KEY_PIC = 'serverProfilePicUrl'; 
 
-    // fetch('/get-profile').then(res => res.json()).then(data => {
-    //     document.querySelectorAll('.username').forEach(el => el.innerText = data.username);
-    //     const bioEl = document.querySelector('.bio');
-    //     if (bioEl) bioEl.innerText = data.bio;
-    //     loadPosts(data.username); 
-    // });
-
-    // 1. ดึง Username จาก Local Storage
-    const loggedInUser = localStorage.getItem('currentUser');
-    
-    if (!loggedInUser) {
-        // ถ้าไม่พบข้อมูลผู้ใช้ (ถือว่ายังไม่ล็อกอิน) ให้เด้งกลับไปหน้า Login
-        alert('Please log in first.');
-        // **ปรับชื่อไฟล์ 'login.html' ให้ตรงกับชื่อไฟล์ Login ของคุณ**
-        window.location.href = 'login.html'; 
-        return; // หยุดการทำงานต่อ
-    }
-    
-    // 2. นำ Username มาแสดงผลบนหน้า Feed (แทนที่ชื่อเดิม)
-    document.querySelectorAll('.username').forEach(el => el.innerText = loggedInUser);
-    
-    // 3. ตั้งค่า Bio และ Load Post
-    const bioEl = document.querySelector('.bio');
-    // ตั้ง Bio ให้เป็นชื่อผู้ใช้ที่ล็อกอิน
-    if (bioEl) bioEl.innerText = 'Hello My name is ' + loggedInUser + ' nice to meet you'; 
-    loadPosts(loggedInUser); // ส่งชื่อผู้ใช้ไปให้ฟังก์ชันโหลดโพสต์
+    fetch('/get-profile').then(res => res.json()).then(data => {
+        document.querySelectorAll('.username').forEach(el => el.innerText = data.username);
+        const bioEl = document.querySelector('.bio');
+        if (bioEl) bioEl.innerText = data.bio;
+        loadPosts(data.username); 
+    });
 
     if (fileInput && profilePic) {
         const savedPic = localStorage.getItem(STORAGE_KEY_PIC);
@@ -50,9 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     const chatButton = document.querySelector('.chat-button');
-    if (chatButton) chatButton.onclick = () => window.location.href = 'chats.html';
+    if (chatButton) chatButton.onclick = () => window.location.href = 'index.html';
 
-    // 2. Search Logic (ส่วนสำคัญ: จับการพิมพ์ในช่องค้นหา)
+    // 2. Search Logic
     const searchInput = document.getElementById('search-input');
     if (searchInput) {
         searchInput.addEventListener('input', (e) => {
@@ -61,52 +41,43 @@ document.addEventListener('DOMContentLoaded', () => {
             const myName = myNameEl ? myNameEl.innerText : '';
 
             if (text.length > 0) {
-                // ถ้ามีข้อความ ให้ค้นหา
                 searchPosts(text);
             } else {
-                // ถ้าลบข้อความหมด ให้โหลดโพสต์ทั้งหมดกลับมา
                 loadPosts(myName);
             }
         });
     }
 });
 
-// ฟังก์ชันโหลดโพสต์ทั้งหมด (ปกติ)
 async function loadPosts(currentUsername) {
     const feedContainer = document.querySelector('.feed');
     try {
         const response = await fetch('/get-posts');
         const posts = await response.json();
 
-        // นับจำนวนโพสต์
         const myPostsCount = posts.filter(p => p.username === currentUsername).length;
         const countElements = document.querySelectorAll('.count');
         if (countElements.length > 0) countElements[0].innerText = myPostsCount;
 
-        // ล้างหน้าจอแล้วใส่โพสต์
         feedContainer.innerHTML = ''; 
         posts.forEach(post => {
             const postElement = createPostHTML(post);
-            feedContainer.appendChild(postElement); // ใช้ appendChild เพราะ Server เรียงมาให้แล้ว
+            feedContainer.appendChild(postElement); 
         });
     } catch (err) { console.error("Error loading posts:", err); }
 }
 
-// ฟังก์ชันค้นหาโพสต์ (ใหม่)
 async function searchPosts(keyword) {
     const feedContainer = document.querySelector('.feed');
     try {
-        // ส่งคำค้นหาไปที่ Server
         const response = await fetch(`/search-posts?q=${encodeURIComponent(keyword)}`);
         const posts = await response.json();
 
-        feedContainer.innerHTML = ''; // ล้างหน้าจอ
-
+        feedContainer.innerHTML = ''; 
         if (posts.length === 0) {
             feedContainer.innerHTML = '<p style="text-align:center; padding:20px; color:#aaa;">No posts found.</p>';
             return;
         }
-
         posts.forEach(post => {
             const postElement = createPostHTML(post);
             feedContainer.appendChild(postElement);
@@ -144,7 +115,6 @@ function createPostHTML(post) {
     return div;
 }
 
-// --- Comment Modal Logic ---
 const modal = document.getElementById('comment-modal');
 const closeModal = document.querySelector('.close-modal');
 let currentPostId = null;
@@ -192,7 +162,6 @@ async function loadComments(postId) {
                     <span class="username-bold">${c.username}</span>
                     <span class="comment-text">${c.comment_text}</span>
                 </div>
-                <span class="comment-heart">♡</span>
             `;
             list.appendChild(item);
         });

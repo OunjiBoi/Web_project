@@ -6,7 +6,6 @@
     <title>FaceBUG Clone</title>
     <link rel="stylesheet" href="feed.css">
 </head>
-
 <body>
     <div class="container">
         <aside class="left-sidebar">
@@ -17,7 +16,7 @@
                 </label>
                 <h2 class="username">George Boonmee</h2>
                 <div class="stats">
-                    <p><span class="count">2</span> Posts</p>
+                    <p><span class="count">0</span> Posts</p>
                     <p><span class="count">8</span> Friends</p>
                 </div>
                 <p class="bio">Hello My name is George nice to meet you</p>
@@ -31,15 +30,10 @@
 
         <main class="main-content">
             <header class="top-bar">
-                <a href="chatter.html" class="logo-link">   
-                    <h1 class="logo">FaceBUG</h1>
-                </a>
-                <!-- <h1 class="logo">FaceBUG</h1> -->
-                
+                <h1 class="logo">FaceBUG</h1>
                 <div class="search-box">
                     <input type="text" id="search-input" placeholder="🔍 Search">
                 </div>
-
                 <div class="actions">
                     <button class="notification-btn">🔔</button>
                     <button class="create-btn" onclick="window.location.href='create.html'">+ CREATE</button>
@@ -54,8 +48,7 @@
             <h3>Friends</h3>
             <ul class="friends-list">
                 <li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>Yourself</span></li>
-                <!-- <li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>Black</span></li> -->
-                 <a href="feed.html?user=Black"style="text-decoration: none; color: inherit;"><li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>Black</span></li></a>
+                <li><div class="friend-pic" style="background-image: url('https://via.placeholder.com/40');"></div><span>Black</span></li>
             </ul>
         </aside>
     </div>
@@ -75,7 +68,7 @@
                 </div>
                 <div class="comments-list" id="comments-list"></div>
                 <div class="modal-footer">
-                    <div class="action-icons"><span>❤️</span> <span>📤</span></div>
+                    <div class="action-icons"><span>📤</span></div>
                     <div class="like-count">512 Likes</div>
                     <div class="comment-input-area">
                         <input type="text" id="comment-input" placeholder="Add a comment...">
@@ -85,7 +78,6 @@
             </div>
         </div>
     </div>
-
     <script src="feed.js"></script>
 </body>
 </html>
