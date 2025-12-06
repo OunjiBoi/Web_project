@@ -3,54 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FaceBUG Sign Up</title>
-    <link rel="stylesheet" href="regis.css">
+    <title>FaceBUG Login</title>
+    <link rel="stylesheet" href="login.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
 
-    <div class="signup-container">
-        
-        </a>
-        <a href="login.html" class="back-arrow">
-            <span class="material-icons">
-                arrow_back
-            </span>
-        </a>
-        
-        <div class="signup-form">
+    <div class="login-container">
+        <div class="image-area">
+            <div class="collage-image">
+                </div>
+        </div>
+
+        <div class="login-form">
             <h1 class="logo">FaceBUG</h1>
 
-            <form>
-                <input type="email" placeholder="Email" required>
-                <input type="text" placeholder="Fullname" required>
-                <input type="text" placeholder="Username" required>
-                <input type="password" placeholder="Password" required>
-                
-                <div class="date-input-wrapper">
-                    <input type="text" placeholder="mm/dd/yyyy" class="date-input" onfocus="(this.type='date')" onblur="(this.type='text')" required>
-                    <span class="material-icons calendar-icon">
-                        calendar_today
-                    </span>
-                </div>
+            <form id="login-form"> 
+                <input type="text" placeholder="Username" id="username-input" required>
+                <input type="password" placeholder="Password" id="password-input" required>
 
-                <div class="gender-selection">
-                    <label>
-                        <input type="radio" name="gender" value="male" checked> Male
-                    </label>
-                    <label>
-                        <input type="radio" name="gender" value="female"> Female
-                    </label>
-                    <label>
-                        <input type="radio" name="gender" value="other"> Other
-                    </label>
-                </div>
+                <button type="submit" class="btn-login">LOGIN</button>
 
-                <button type="submit" class="btn-signup">SIGN UP</button>
+                <p class="forgot-text">
+                    or
+                    <br>
+                    <a href="#">Forgot password?</a>
+                </p>
+
+                <a href="regis.html" class="btn-create" role="button">CREATE A NEW ACCOUNT</a>
             </form>
         </div>
     </div>
+    
+    <script src="login.js"></script> 
 
 </body>
 </html>
