@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FaceBUG Sign Up</title>
+    <link rel="stylesheet" href="regis.css">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+
+    <div class="signup-container">
+        <a href="index.html" class="back-arrow">
+            <span class="material-icons">arrow_back</span>
+        </a>
+        
+        <div class="signup-form">
+            <h1 class="logo">FaceBUG</h1>
+
+            <form id="regis-form"> <input type="email" id="r-email" placeholder="Email" required>
+                <input type="text" id="r-fullname" placeholder="Fullname" required>
+                <input type="text" id="r-username" placeholder="Username" required>
+                <input type="password" id="r-password" placeholder="Password" required>
+                
+                <div class="date-input-wrapper">
+                    <input type="text" id="r-birthdate" placeholder="mm/dd/yyyy" class="date-input" onfocus="(this.type='date')" onblur="(this.type='text')" required>
+                    <span class="material-icons calendar-icon">calendar_today</span>
+                </div>
+
+                <div class="gender-selection">
+                    <label><input type="radio" name="gender" value="male" checked> Male</label>
+                    <label><input type="radio" name="gender" value="female"> Female</label>
+                    <label><input type="radio" name="gender" value="other"> Other</label>
+                </div>
+
+                <button type="submit" class="btn-signup">SIGN UP</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="regis.js"></script>
+</body>
+</html>

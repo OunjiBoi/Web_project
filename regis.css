@@ -1,0 +1,181 @@
+/* การรีเซ็ตค่าพื้นฐาน */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: sans-serif;
+    background-color: #000; /* พื้นหลังสีดำสนิท */
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* ภาชนะหลัก */
+.signup-container {
+    width: 100%;
+    max-width: 450px;
+    padding: 30px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* ไอคอนลูกศรย้อนกลับ */
+.back-arrow {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #fff;
+    font-size: 2rem;
+    text-decoration: none;
+    padding: 0 0 20px 0;
+}
+
+.back-arrow .material-icons {
+    font-size: 2rem;
+}
+
+/* โลโก้ 'FaceBUG' */
+.logo {
+    font-family: 'Dancing Script', cursive;
+    font-size: 3.5rem;
+    color: #fff;
+    margin: 20px 0 50px 0;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    text-align: center;
+}
+
+/* ช่อง input ทั่วไป */
+.signup-form input[type="email"],
+.signup-form input[type="text"],
+.signup-form input[type="password"],
+.signup-form .date-input {
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 25px;
+    border: none;
+    border-radius: 50px;
+    background-color: #fff;
+    color: #333;
+    font-size: 1rem;
+    outline: none;
+}
+
+/* --- ส่วนของวันเกิด (Date Input) --- */
+.date-input-wrapper {
+    position: relative;
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+.date-input {
+    padding-right: 45px !important; 
+}
+
+.calendar-icon {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+    font-size: 1.5rem;
+    pointer-events: none;
+}
+
+/* --- ส่วนเลือกเพศ (Custom Radio Button) --- */
+.gender-selection {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+    margin-bottom: 30px;
+    color: #fff;
+    font-size: 1.1rem;
+}
+
+/* กล่องครอบแต่ละตัวเลือก */
+.radio-container {
+    display: block;
+    position: relative;
+    padding-left: 30px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 18px;
+    user-select: none;
+}
+
+/* ซ่อนปุ่ม Radio ดั้งเดิมของ Browser */
+.radio-container input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+}
+
+/* สร้างวงกลมขึ้นมาเอง (วงนอก) */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 20px;
+    width: 20px;
+    background-color: transparent;
+    border: 2px solid #fff;
+    border-radius: 50%;
+}
+
+/* Effect เมื่อเอาเมาส์ชี้ */
+.radio-container:hover input ~ .checkmark {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* เมื่อถูกเลือก: เปลี่ยนสีพื้นหลังวงกลม */
+.radio-container input:checked ~ .checkmark {
+    background-color: #fff;
+}
+
+/* สร้างจุดสีดำตรงกลาง (ซ่อนไว้ก่อน) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* เมื่อถูกเลือก: แสดงจุดสีดำ */
+.radio-container input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* จัดตำแหน่งและขนาดของจุดสีดำ */
+.radio-container .checkmark:after {
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #000;
+    transform: translate(-50%, -50%);
+}
+
+/* ปุ่มหลัก (SIGN UP) */
+.btn-signup {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    background: linear-gradient(to right, #00FFC0, #00CFFF);
+    box-shadow: 0 5px 20px rgba(0, 200, 255, 0.4);
+    transition: transform 0.2s;
+}
+
+.btn-signup:hover {
+    transform: scale(1.02);
+}

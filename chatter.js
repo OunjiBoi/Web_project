@@ -1,15 +1,9 @@
 window.onload = pageLoad;
-var username = "George";
+var username = localStorage.getItem('myUsername') || "Guest"; // ใช้ชื่อจาก Storage
 var timer = null;
 const CHAT_CONTAINER_ID = "chat-messages-container";
 
 async function pageLoad() {
-    try {
-        let res = await fetch('/get-profile');
-        let data = await res.json();
-        if (data.username) username = data.username;
-    } catch (e) { console.error(e); }
-
     document.getElementById("contact-name").innerHTML = "Chat Room";
     const backBtn = document.querySelector(".back-arrow");
     if (backBtn) backBtn.onclick = () => window.location.href = "feed.html";
@@ -44,6 +38,7 @@ async function pageLoad() {
     timer = setInterval(loadLog, 3000);
 }
 
+// ... (ฟังก์ชันอื่นๆ เหมือนเดิม) ...
 function loadLog() { readLog(); }
 function sendMsg() {
     var input = document.getElementById("message-input-field");

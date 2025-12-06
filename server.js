@@ -28,20 +28,84 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// --- API: Uploads ---
+// ==========================================
+// 1. Auth System
+// ==========================================
+app.post('/register', (req, res) => {
+    const { email, fullname, username, password, birthdate, gender } = req.body;
+    const sqlUser = "INSERT INTO users (email, fullname, username, password, birthdate, gender) VALUES (?, ?, ?, ?, ?, ?)";
+    
+    db.query(sqlUser, [email, fullname, username, password, birthdate, gender], (err, result) => {
+        if (err) return res.status(500).send("Error: Username might already exist.");
+
+        // สร้าง Profile เริ่มต้นให้ user ใหม่
+        const sqlProfile = "INSERT INTO user_profile (username, bio, profile_pic) VALUES (?, 'New member of FaceBUG', 'https://via.placeholder.com/40') ON DUPLICATE KEY UPDATE bio=bio";
+        db.query(sqlProfile, [username], (err) => {
+            if(err) console.log("Profile creation warning:", err);
+        });
+
+        res.status(200).send("Register Success");
+    });
+});
+
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+    const sql = "SELECT * FROM users WHERE username = ? AND password = ?";
+    db.query(sql, [username, password], (err, results) => {
+        if (err) return res.status(500).send("Database Error");
+        if (results.length > 0) {
+            res.status(200).send("Login Success");
+        } else {
+            res.status(401).send("Invalid Username or Password");
+        }
+    });
+});
+
+// ==========================================
+// 2. Profile & Uploads (แก้ไขให้ใช้ username)
+// ==========================================
+app.get('/get-profile', (req, res) => {
+    // รับ username จาก Client มาค้นหา
+    const username = req.query.username;
+    if (!username) return res.json({ username: 'Guest', bio: '' });
+
+    db.query("SELECT * FROM user_profile WHERE username = ?", [username], (err, result) => {
+        if (err) return res.json({});
+        // ถ้าไม่เจอ user ให้ส่งค่า Default
+        res.json(result[0] || { username: username, bio: '', profile_pic: '' });
+    });
+});
+
+app.post('/update-profile', (req, res) => {
+    const { username, bio } = req.body;
+    // อัปเดต Bio โดยอ้างอิงจาก username
+    db.query("UPDATE user_profile SET bio = ? WHERE username = ?", [bio, username], (err) => {
+        if (err) return res.status(500).send("Error");
+        res.status(200).send("Updated");
+    });
+});
+
 app.post('/upload-profile', upload.single('profilePic'), (req, res) => {
     if (!req.file) return res.status(400).send('No file uploaded');
-    res.json({ imageUrl: '/uploads/' + req.file.filename });
+    
+    const fileUrl = '/uploads/' + req.file.filename;
+    const username = req.body.username; // รับชื่อมาด้วย
+
+    const sql = "UPDATE user_profile SET profile_pic = ? WHERE username = ?";
+    db.query(sql, [fileUrl, username], (err) => {
+        if(err) console.error(err);
+        res.json({ imageUrl: fileUrl });
+    });
 });
 
-// --- API: Chat Image Upload (เพิ่มใหม่) ---
 app.post('/upload-chat-image', upload.single('chatImage'), (req, res) => {
     if (!req.file) return res.status(400).send('No file uploaded');
-    // ส่ง URL ของรูปกลับไป
     res.json({ imageUrl: '/uploads/' + req.file.filename });
 });
 
-// --- API: Chat Messages ---
+// ==========================================
+// 3. Chat
+// ==========================================
 app.get('/inmsg', (req, res) => {
     db.query("SELECT * FROM messages ORDER BY id ASC", (err, results) => {
         if (err) return res.json([]);
@@ -63,22 +127,9 @@ app.post('/editmsg', (req, res) => {
     });
 });
 
-// --- API: Profile ---
-app.get('/get-profile', (req, res) => {
-    db.query("SELECT * FROM user_profile WHERE id = 1", (err, result) => {
-        if (err) return res.json({});
-        res.json(result[0] || { username: 'Guest', bio: '' });
-    });
-});
-app.post('/update-profile', (req, res) => {
-    const { username, bio } = req.body;
-    db.query("UPDATE user_profile SET username = ?, bio = ? WHERE id = 1", [username, bio], (err) => {
-        if (err) return res.status(500).send("Error");
-        res.status(200).send("Updated");
-    });
-});
-
-// --- API: Posts ---
+// ==========================================
+// 4. Posts & Comments
+// ==========================================
 app.post('/create-post', upload.single('postImage'), (req, res) => {
     const { username, content } = req.body;
     const imagePath = req.file ? '/uploads/' + req.file.filename : '';
@@ -87,23 +138,36 @@ app.post('/create-post', upload.single('postImage'), (req, res) => {
         res.status(200).send("Success");
     });
 });
+
 app.get('/get-posts', (req, res) => {
-    db.query("SELECT * FROM posts ORDER BY time_posted DESC", (err, results) => {
+    const sql = `
+        SELECT posts.*, user_profile.profile_pic 
+        FROM posts 
+        LEFT JOIN user_profile ON posts.username = user_profile.username 
+        ORDER BY posts.time_posted DESC
+    `;
+    db.query(sql, (err, results) => {
         if (err) return res.json([]);
         res.json(results);
     });
 });
+
 app.get('/search-posts', (req, res) => {
     const searchTerm = req.query.q;
-    const sql = "SELECT * FROM posts WHERE content LIKE ? OR username LIKE ? ORDER BY time_posted DESC";
     const query = `%${searchTerm}%`;
+    const sql = `
+        SELECT posts.*, user_profile.profile_pic 
+        FROM posts 
+        LEFT JOIN user_profile ON posts.username = user_profile.username 
+        WHERE posts.content LIKE ? OR posts.username LIKE ? 
+        ORDER BY posts.time_posted DESC
+    `;
     db.query(sql, [query, query], (err, results) => {
         if (err) return res.json([]);
         res.json(results);
     });
 });
 
-// --- API: Comments ---
 app.get('/get-comments/:postId', (req, res) => {
     const postId = req.params.postId;
     db.query("SELECT * FROM comments WHERE post_id = ? ORDER BY created_at ASC", [postId], (err, results) => {
