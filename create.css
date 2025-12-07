@@ -97,3 +97,75 @@ textarea:focus {
 .back:hover {
     background-color: #555;
 }
+
+/* =========================================
+   NEW: Styling for Contact List (chatter.js output)
+   ========================================= */
+
+/* ทำให้ container ของรายการเพื่อนเลื่อนได้ */
+.chat-list {
+    flex-grow: 1; /* กินพื้นที่ที่เหลือใน sidebar */
+    overflow-y: auto; /* เปิดใช้งาน scroll หากมีเพื่อนเยอะ */
+    padding-right: 20px; /* ชดเชย padding ของ sidebar */
+    /* เพิ่มสีและขนาดพื้นฐานเผื่อไว้ */
+    background-color: #1c1c1c; 
+    padding-top: 5px;
+}
+
+/* รูปแบบของเพื่อนแต่ละคน */
+.contact-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.2s;
+}
+
+.contact-item:hover {
+    background-color: #333; /* สีไฮไลท์เมื่อเอาเมาส์ชี้ */
+}
+
+.contact-item.active {
+    background-color: #ff9800; /* สีสำหรับผู้ติดต่อที่กำลังสนทนาอยู่ (สีส้ม) */
+    color: #1c1c1c; /* เปลี่ยนสีข้อความเป็นสีเข้ม */
+}
+
+.contact-item .avatar {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.contact-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    min-width: 0;
+}
+
+.contact-name {
+    font-weight: bold;
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: inherit; /* ใช้สีที่กำหนดใน .contact-item.active */
+}
+
+.last-message {
+    font-size: 13px;
+    color: #999;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* แก้ไขเมื่อ active ให้ข้อความรองเป็นสีขาว */
+.contact-item.active .last-message {
+    color: #1c1c1c;
+}
