@@ -1,16 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. ตรวจสอบว่าล็อกอินหรือยัง
-    const myUsername = localStorage.getItem('myUsername');
-    if (!myUsername) {
-        alert("กรุณาล็อกอินก่อน");
-        window.location.href = 'index.html';
-        return;
-    }
-
+    // 1. Profile & Upload
     const fileInput = document.getElementById('profile-upload');
     const profilePic = document.getElementById('current-profile-pic');
     const STORAGE_KEY_PIC = 'serverProfilePicUrl'; 
 
+<<<<<<< HEAD
     const searchInputPost = document.getElementById('search-input-post'); // ค้นหา Post (เดิมคือ search-input)
     const searchInputUser = document.getElementById('user-search-input'); // เปลี่ยนชื่อตัวแปรเพื่อไม่ให้ซ้ำกับ searchInput เดิม
     const searchButton = document.getElementById('search-user-btn');
@@ -42,6 +36,14 @@ document.addEventListener('DOMContentLoaded', () => {
             loadPosts(data.username); 
             loadOnlineFriends(data.username);
         });
+=======
+    fetch('/get-profile').then(res => res.json()).then(data => {
+        document.querySelectorAll('.username').forEach(el => el.innerText = data.username);
+        const bioEl = document.querySelector('.bio');
+        if (bioEl) bioEl.innerText = data.bio;
+        loadPosts(data.username); 
+    });
+>>>>>>> parent of 431c4f4 (แก้ใหม่หมดย้อนกลับไปใช้ของเดิม)
 
     if (fileInput && profilePic) {
         const savedPic = localStorage.getItem(STORAGE_KEY_PIC);
@@ -51,14 +53,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.target.files[0]) {
                 const formData = new FormData();
                 formData.append('profilePic', e.target.files[0]);
-                formData.append('username', myUsername); // ส่งชื่อไปบอกว่าใครอัปโหลด
-
                 const res = await fetch('/upload-profile', { method: 'POST', body: formData });
                 if (res.ok) {
                     const data = await res.json();
                     profilePic.style.backgroundImage = `url('${data.imageUrl}')`;
                     localStorage.setItem(STORAGE_KEY_PIC, data.imageUrl);
-                    setTimeout(() => location.reload(), 500);
                 }
             }
         });
@@ -67,6 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatButton = document.querySelector('.chat-button');
     if (chatButton) chatButton.onclick = () => window.location.href = 'chatter.html';
 
+<<<<<<< HEAD
     // const searchInput = document.getElementById('search-input');
     // if (searchInput) {
     //     searchInput.addEventListener('input', (e) => {
@@ -86,9 +86,21 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Logic สำหรับ Search Posts (ช่องค้นหาเดิม) ---
     if (searchInputPost) {
         searchInputPost.addEventListener('input', (e) => {
+=======
+    // 2. Search Logic
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+>>>>>>> parent of 431c4f4 (แก้ใหม่หมดย้อนกลับไปใช้ของเดิม)
             const text = e.target.value.trim();
-            if (text.length > 0) searchPosts(text);
-            else loadPosts(myUsername);
+            const myNameEl = document.querySelector('.username');
+            const myName = myNameEl ? myNameEl.innerText : '';
+
+            if (text.length > 0) {
+                searchPosts(text);
+            } else {
+                loadPosts(myName);
+            }
         });
     }
 
@@ -293,31 +305,34 @@ async function searchPosts(keyword) {
     try {
         const response = await fetch(`/search-posts?q=${encodeURIComponent(keyword)}`);
         const posts = await response.json();
+
         feedContainer.innerHTML = ''; 
         if (posts.length === 0) {
             feedContainer.innerHTML = '<p style="text-align:center; padding:20px; color:#aaa;">No posts found.</p>';
             return;
         }
-        posts.forEach(post => feedContainer.appendChild(createPostHTML(post)));
+        posts.forEach(post => {
+            const postElement = createPostHTML(post);
+            feedContainer.appendChild(postElement);
+        });
     } catch (err) { console.error(err); }
 }
 
 function createPostHTML(post) {
     const div = document.createElement('div');
     div.className = 'post';
+
     const dateOptions = { hour: 'numeric', minute: 'numeric', day: 'numeric', month: 'short' };
     const timeString = new Date(post.time_posted).toLocaleDateString('en-US', dateOptions);
     const rawImagePath = post.image_path || '';
     const safeImagePath = rawImagePath.replace(/\\/g, '/');
     const imageStyle = safeImagePath ? `background-image: url('${safeImagePath}');` : 'display: none;';
-    
-    // รูปโปรไฟล์คนโพสต์
-    let userProfilePic = post.profile_pic || `https://ui-avatars.com/api/?name=${encodeURIComponent(post.username)}&background=random&color=fff`;
+    let userProfilePic = localStorage.getItem('serverProfilePicUrl') || 'https://via.placeholder.com/40';
 
     div.innerHTML = `
         <div class="post-header">
             <div class="user-info">
-                <img src="${userProfilePic}" class="post-profile-pic" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(post.username)}&background=random&color=fff'">
+                <div class="post-profile-pic" style="background-image: url('${userProfilePic}');"></div>
                 <span class="post-username">${post.username}</span>
             </div>
             <span class="post-time">${timeString}</span>
@@ -333,7 +348,6 @@ function createPostHTML(post) {
     return div;
 }
 
-// Modal Logic
 const modal = document.getElementById('comment-modal');
 const closeModal = document.querySelector('.close-modal');
 let currentPostId = null;
@@ -341,7 +355,7 @@ let currentPostId = null;
 async function openCommentModal(postId, imageUrl, ownerName, ownerPicUrl) {
     currentPostId = postId;
     const modalImg = document.getElementById('modal-post-image');
-    if (imageUrl && imageUrl !== 'undefined' && imageUrl !== '') {
+    if (imageUrl) {
         modalImg.src = imageUrl;
         modalImg.style.display = 'block';
         document.querySelector('.modal-left').style.display = 'flex';
@@ -350,18 +364,17 @@ async function openCommentModal(postId, imageUrl, ownerName, ownerPicUrl) {
         document.querySelector('.modal-left').style.display = 'none';
     }
     document.getElementById('modal-owner-name').innerText = ownerName;
-    const ownerImg = document.getElementById('modal-owner-pic');
-    ownerImg.src = ownerPicUrl;
-    ownerImg.onerror = () => ownerImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(ownerName)}&background=random&color=fff`;
-
+    document.getElementById('modal-owner-pic').src = ownerPicUrl;
     document.getElementById('comments-list').innerHTML = '';
+    
     modal.style.display = 'flex';
     loadComments(postId);
 }
 
 async function loadComments(postId) {
     const list = document.getElementById('comments-list');
-    const myName = localStorage.getItem('myUsername') || 'Guest';
+    const myNameEl = document.querySelector('.username');
+    const myName = myNameEl ? myNameEl.innerText : 'Guest';
     let myPic = localStorage.getItem('serverProfilePicUrl');
     if (!myPic) myPic = `https://ui-avatars.com/api/?name=${encodeURIComponent(myName)}&background=random&color=fff`;
 
@@ -372,14 +385,12 @@ async function loadComments(postId) {
         comments.forEach(c => {
             const item = document.createElement('div');
             item.className = 'comment-item';
-            
-            // เช็คว่าใครคอมเมนต์เพื่อเลือกรูป
             let avatarUrl;
             if (c.username === myName) avatarUrl = myPic;
             else avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(c.username)}&background=random&color=fff&size=128`;
 
             item.innerHTML = `
-                <img src="${avatarUrl}" class="avatar-small" style="object-fit: cover;" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(c.username)}&background=random&color=fff'">
+                <img src="${avatarUrl}" class="avatar-small" style="object-fit: cover;">
                 <div>
                     <span class="username-bold">${c.username}</span>
                     <span class="comment-text">${c.comment_text}</span>
@@ -396,7 +407,10 @@ document.getElementById('submit-comment-btn').addEventListener('click', async ()
     const text = input.value.trim();
     if (!text) return;
 
-    const myName = localStorage.getItem('myUsername');
+    let myName = 'Anonymous';
+    const nameEl = document.querySelector('.username'); 
+    if (nameEl) myName = nameEl.innerText;
+
     await fetch('/add-comment', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},

@@ -12,455 +12,65 @@
     --border-radius-main: 15px;
     --profile-pic-size: 100px;
 }
-
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: sans-serif;
-}
-
-body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    min-height: 100vh;
-}
-
-.container {
-    display: grid;
-    grid-template-columns: 250px 1fr 250px;
-    gap: 20px;
-    padding: 20px;
-    max-width: 1400px;
-    margin: 0 auto;
-}
-
-.left-sidebar {
-    position: sticky;
-    top: 20px;
-    height: fit-content;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px 0;
-}
-
-.profile-card {
-    background-color: var(--main-bg);
-    padding: 20px;
-    border-radius: var(--border-radius-main);
-    text-align: center;
-    width: 100%;
-    margin-bottom: 30px;
-}
-
-.profile-upload-area {
-    cursor: pointer;
-    display: block;
-    width: var(--profile-pic-size);
-    height: var(--profile-pic-size);
-    margin: 0 auto 15px;
-    border-radius: 50%;
-    position: relative;
-}
-
-.profile-pic {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background-size: cover;
-    background-position: center;
-    border: 3px solid var(--primary-color);
-    transition: opacity 0.3s;
-}
-
-.profile-upload-area:hover .profile-pic {
-    opacity: 0.8;
-}
-
-.username {
-    font-size: 1.4em;
-    margin-bottom: 5px;
-}
-
-.stats {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    color: var(--light-text-color);
-    margin-bottom: 15px;
-}
-
-.stats .count {
-    color: var(--text-color);
-    font-weight: bold;
-}
-
-.bio {
-    color: var(--light-text-color);
-    font-size: 0.9em;
-}
-
-.settings-nav {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-bottom: auto;
-}
-
-.settings-nav a {
-    color: var(--text-color);
-    text-decoration: none;
-    font-size: 1.1em;
-    padding: 10px 20px;
-    border-radius: 10px;
-    transition: background-color 0.2s;
-}
-
-.settings-nav a:hover {
-    background-color: var(--card-bg);
-}
-
-.settings-nav .icon {
-    margin-right: 10px;
-}
-
-.chat-button {
-    background: var(--chat-button-bg);
-    color: var(--text-color);
-    border: none;
-    padding: 15px 30px;
-    border-radius: 30px;
-    font-weight: bold;
-    font-size: 1.1em;
-    cursor: pointer;
-    margin-top: 30px;
-}
-
-.main-content {
-    background-color: var(--main-bg);
-    border-radius: var(--border-radius-main);
-    padding: 0 20px 20px 20px;
-    display: flex;
-    flex-direction: column;
-}
-
-.top-bar {
-    display: flex;
-    align-items: center;
-    padding: 20px 0;
-    margin-bottom: 20px;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background-color: var(--main-bg);
-}
-
-.logo {
-    color: var(--primary-color);
-    font-size: 1.8em;
-    font-weight: bold;
-    margin-right: 30px;
-}
-
-.search-box {
-    flex-grow: 1;
-    max-width: 500px;
-}
-
-.search-box input {
-    width: 100%;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 20px;
-    background-color: var(--search-bg);
-    color: var(--text-color);
-    font-size: 1em;
-    outline: none;
-}
-
-.actions {
-    display: flex;
-    gap: 15px;
-    margin-left: auto;
-}
-
-.notification-btn,
-.create-btn {
-    border: none;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    font-size: 1em;
-}
-
-.notification-btn {
-    background-color: var(--search-bg);
-    color: var(--text-color);
-    font-size: 1.2em;
-    width: 40px;
-    height: 40px;
-    padding: 0;
-}
-
-.create-btn {
-    background: var(--create-button-bg);
-    color: var(--text-color);
-}
-
-.feed {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.post {
-    background-color: var(--card-bg);
-    border-radius: var(--border-radius-main);
-    padding: 15px;
-}
-
-.post-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 15px;
-}
-
-.user-info {
-    display: flex;
-    align-items: center;
-}
-
-.post-profile-pic {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-size: cover;
-    background-position: center;
-    margin-right: 10px;
-    border: 1px solid var(--primary-color);
-}
-
-.post-username {
-    font-weight: bold;
-}
-
-.post-time {
-    color: var(--light-text-color);
-    font-size: 0.9em;
-}
-
-.post-image {
-    width: 100%;
-    height: 500px;
-    background-size: cover;
-    background-position: center;
-    border-radius: 10px;
-    margin-bottom: 15px;
-    border: 1px solid var(--search-bg);
-}
-
-.post-footer {
-    display: flex;
-    gap: 20px;
-}
-
-.action-icon {
-    color: var(--light-text-color);
-    cursor: pointer;
-    transition: color 0.2s;
-}
-
-.action-icon:hover {
-    color: var(--primary-color);
-}
-
-.right-sidebar {
-    position: sticky;
-    top: 20px;
-    height: fit-content;
-    background-color: var(--main-bg);
-    border-radius: var(--border-radius-main);
-    padding: 20px;
-}
-
-.right-sidebar h3 {
-    font-size: 1.2em;
-    margin-bottom: 20px;
-    border-bottom: 1px solid var(--search-bg);
-    padding-bottom: 10px;
-}
-
-.friends-list {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.friends-list li {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 8px;
-}
-
-.friends-list li:hover {
-    background-color: var(--card-bg);
-}
-
-.friend-pic {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    background-size: cover;
-    background-position: center;
-    margin-right: 10px;
-    border: 1px solid var(--light-text-color);
-}
-
-.modal-overlay {
-    display: none;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.85);
-    z-index: 1000;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    display: flex;
-    width: 900px;
-    height: 600px;
-    background-color: #000;
-    border-radius: 5px;
-    overflow: hidden;
-    position: relative;
-    border: 1px solid #333;
-}
-
-.close-modal {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-    color: white;
-    font-size: 30px;
-    font-weight: bold;
-    cursor: pointer;
-    z-index: 1001;
-}
-
-.modal-left {
-    flex: 1.5;
-    background-color: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-right: 1px solid #333;
-}
-
-#modal-post-image {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.modal-right {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    background-color: #000;
-}
-
-.modal-header {
-    padding: 15px;
-    border-bottom: 1px solid #333;
-    display: flex;
-    align-items: center;
-}
-
-.avatar-small {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-.username-bold {
-    font-weight: bold;
-    color: white;
-    font-size: 14px;
-}
-
-.comments-list {
-    flex-grow: 1;
-    overflow-y: auto;
-    padding: 15px;
-}
-
-.comment-item {
-    display: flex;
-    margin-bottom: 15px;
-    align-items: flex-start;
-}
-
-.comment-text {
-    color: #eee;
-    font-size: 14px;
-    margin-left: 5px;
-}
-
-.comment-heart {
-    margin-left: auto;
-    font-size: 12px;
-    cursor: pointer;
-    color: #aaa;
-}
-
-.modal-footer {
-    padding: 15px;
-    border-top: 1px solid #333;
-}
-
-.action-icons span {
-    font-size: 24px;
-    margin-right: 15px;
-    cursor: pointer;
-}
-
-.like-count {
-    font-weight: bold;
-    margin-top: 5px;
-    font-size: 14px;
-}
-
-.comment-input-area {
-    display: flex;
-    border-top: 1px solid #333;
-    padding-top: 10px;
-    margin-top: 10px;
-}
-
-#comment-input {
-    flex-grow: 1;
-    background: none;
-    border: none;
-    color: white;
-    outline: none;
-}
-
-#submit-comment-btn {
-    background: none;
-    border: none;
-    color: #0095f6;
-    font-weight: bold;
-    cursor: pointer;
-}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: sans-serif; }
+body { background-color: var(--bg-color); color: var(--text-color); min-height: 100vh; }
+.container { display: grid; grid-template-columns: 250px 1fr 250px; gap: 20px; padding: 20px; max-width: 1400px; margin: 0 auto; }
+.left-sidebar { position: sticky; top: 20px; height: fit-content; display: flex; flex-direction: column; align-items: center; padding: 20px 0; }
+.profile-card { background-color: var(--main-bg); padding: 20px; border-radius: var(--border-radius-main); text-align: center; width: 100%; margin-bottom: 30px; }
+.profile-upload-area { cursor: pointer; display: block; width: var(--profile-pic-size); height: var(--profile-pic-size); margin: 0 auto 15px; border-radius: 50%; position: relative; }
+.profile-pic { width: 100%; height: 100%; border-radius: 50%; background-size: cover; background-position: center; border: 3px solid var(--primary-color); transition: opacity 0.3s; }
+.profile-upload-area:hover .profile-pic { opacity: 0.8; }
+.username { font-size: 1.4em; margin-bottom: 5px; }
+.stats { display: flex; justify-content: center; gap: 20px; color: var(--light-text-color); margin-bottom: 15px; }
+.stats .count { color: var(--text-color); font-weight: bold; }
+.bio { color: var(--light-text-color); font-size: 0.9em; }
+.settings-nav { width: 100%; display: flex; flex-direction: column; gap: 15px; margin-bottom: auto; }
+.settings-nav a { color: var(--text-color); text-decoration: none; font-size: 1.1em; padding: 10px 20px; border-radius: 10px; transition: background-color 0.2s; }
+.settings-nav a:hover { background-color: var(--card-bg); }
+.settings-nav .icon { margin-right: 10px; }
+.chat-button { background: var(--chat-button-bg); color: var(--text-color); border: none; padding: 15px 30px; border-radius: 30px; font-weight: bold; font-size: 1.1em; cursor: pointer; margin-top: 30px; }
+.main-content { background-color: var(--main-bg); border-radius: var(--border-radius-main); padding: 0 20px 20px 20px; display: flex; flex-direction: column; }
+.top-bar { display: flex; align-items: center; padding: 20px 0; margin-bottom: 20px; position: sticky; top: 0; z-index: 10; background-color: var(--main-bg); }
+.logo { color: var(--primary-color); font-size: 1.8em; font-weight: bold; margin-right: 30px; }
+.search-box { flex-grow: 1; max-width: 500px; }
+.search-box input { width: 100%; padding: 10px 15px; border: none; border-radius: 20px; background-color: var(--search-bg); color: var(--text-color); font-size: 1em; outline: none; }
+.actions { display: flex; gap: 15px; margin-left: auto; }
+.notification-btn, .create-btn { border: none; padding: 10px 20px; border-radius: 20px; font-weight: bold; cursor: pointer; font-size: 1em; }
+.notification-btn { background-color: var(--search-bg); color: var(--text-color); font-size: 1.2em; width: 40px; height: 40px; padding: 0; }
+.create-btn { background: var(--create-button-bg); color: var(--text-color); }
+.feed { display: flex; flex-direction: column; gap: 20px; }
+.post { background-color: var(--card-bg); border-radius: var(--border-radius-main); padding: 15px; }
+.post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.user-info { display: flex; align-items: center; }
+.post-profile-pic { width: 40px; height: 40px; border-radius: 50%; background-size: cover; background-position: center; margin-right: 10px; border: 1px solid var(--primary-color); }
+.post-username { font-weight: bold; }
+.post-time { color: var(--light-text-color); font-size: 0.9em; }
+.post-image { width: 100%; height: 500px; background-size: cover; background-position: center; border-radius: 10px; margin-bottom: 15px; border: 1px solid var(--search-bg); }
+.post-footer { display: flex; gap: 20px; }
+.action-icon { color: var(--light-text-color); cursor: pointer; transition: color 0.2s; }
+.action-icon:hover { color: var(--primary-color); }
+.right-sidebar { position: sticky; top: 20px; height: fit-content; background-color: var(--main-bg); border-radius: var(--border-radius-main); padding: 20px; }
+.right-sidebar h3 { font-size: 1.2em; margin-bottom: 20px; border-bottom: 1px solid var(--search-bg); padding-bottom: 10px; }
+.friends-list { list-style: none; display: flex; flex-direction: column; gap: 15px; }
+.friends-list li { display: flex; align-items: center; cursor: pointer; padding: 5px; border-radius: 8px; }
+.friends-list li:hover { background-color: var(--card-bg); }
+.friend-pic { width: 40px; height: 40px; border-radius: 50%; background-size: cover; background-position: center; margin-right: 10px; border: 1px solid var(--light-text-color); }
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); z-index: 1000; justify-content: center; align-items: center; }
+.modal-content { display: flex; width: 900px; height: 600px; background-color: #000; border-radius: 5px; overflow: hidden; position: relative; border: 1px solid #333; }
+.close-modal { position: absolute; top: 10px; right: 20px; color: white; font-size: 30px; font-weight: bold; cursor: pointer; z-index: 1001; }
+.modal-left { flex: 1.5; background-color: #000; display: flex; align-items: center; justify-content: center; border-right: 1px solid #333; }
+#modal-post-image { width: 100%; height: 100%; object-fit: contain; }
+.modal-right { flex: 1; display: flex; flex-direction: column; background-color: #000; }
+.modal-header { padding: 15px; border-bottom: 1px solid #333; display: flex; align-items: center; }
+.avatar-small { width: 32px; height: 32px; border-radius: 50%; margin-right: 10px; }
+.username-bold { font-weight: bold; color: white; font-size: 14px; }
+.comments-list { flex-grow: 1; overflow-y: auto; padding: 15px; }
+.comment-item { display: flex; margin-bottom: 15px; align-items: flex-start; }
+.comment-text { color: #eee; font-size: 14px; margin-left: 5px; }
+.comment-heart { margin-left: auto; font-size: 12px; cursor: pointer; color: #aaa; }
+.modal-footer { padding: 15px; border-top: 1px solid #333; }
+.action-icons span { font-size: 24px; margin-right: 15px; cursor: pointer; }
+.like-count { font-weight: bold; margin-top: 5px; font-size: 14px; }
+.comment-input-area { display: flex; border-top: 1px solid #333; padding-top: 10px; margin-top: 10px; }
+#comment-input { flex-grow: 1; background: none; border: none; color: white; outline: none; }
+#submit-comment-btn { background: none; border: none; color: #0095f6; font-weight: bold; cursor: pointer; }

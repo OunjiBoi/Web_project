@@ -4,14 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const saveBtn = document.getElementById('save-btn');
     const backBtn = document.getElementById('back-btn');
 
-    // ดึงชื่อจาก Storage
-    const myUsername = localStorage.getItem('myUsername');
-    if(!myUsername) {
-        window.location.href = 'index.html';
-        return;
-    }
-
-    fetch(`/get-profile?username=${myUsername}`)
+    fetch('/get-profile')
         .then(response => response.json())
         .then(data => {
             if (data.username) nameInput.value = data.username;
@@ -19,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
     saveBtn.addEventListener('click', async () => {
-        const newData = { username: myUsername, bio: bioInput.value }; // ส่งชื่อเดิมไปอ้างอิง (ถ้าจะเปลี่ยนชื่อต้องแก้ logic เพิ่ม)
+        const newData = { username: nameInput.value, bio: bioInput.value };
         try {
             const response = await fetch('/update-profile', {
                 method: 'POST',

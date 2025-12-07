@@ -1,13 +1,37 @@
 window.onload = pageLoad;
+<<<<<<< HEAD
 var username= "Me"; // ตั้งชื่อผู้ใช้เริ่มต้น (แก้ได้ตามต้องการ)
+=======
+var username = "George";
+>>>>>>> parent of 431c4f4 (แก้ใหม่หมดย้อนกลับไปใช้ของเดิม)
 var timer = null;
 const CHAT_CONTAINER_ID = "chat-messages-container"; 
 
+<<<<<<< HEAD
 function pageLoad(){
 	// 1. ตั้งค่าปุ่มส่งข้อความ
 	var x = document.getElementById("send-msg-button");
 	if (x) {
         x.onclick = sendMsg;
+=======
+async function pageLoad() {
+    try {
+        let res = await fetch('/get-profile');
+        let data = await res.json();
+        if (data.username) username = data.username;
+    } catch (e) { console.error(e); }
+
+    document.getElementById("contact-name").innerHTML = "Chat Room";
+    const backBtn = document.querySelector(".back-arrow");
+    if (backBtn) backBtn.onclick = () => window.location.href = "feed.html";
+    const sendBtn = document.getElementById("send-msg-button");
+    if (sendBtn) sendBtn.onclick = sendMsg;
+    const input = document.getElementById("message-input-field");
+    if (input) {
+        input.addEventListener("keypress", (e) => {
+            if (e.key === "Enter") { e.preventDefault(); sendMsg(); }
+        });
+>>>>>>> parent of 431c4f4 (แก้ใหม่หมดย้อนกลับไปใช้ของเดิม)
     }
 
     // 2. ตั้งค่าชื่อใน Header
@@ -41,8 +65,18 @@ function pageLoad(){
 	timer = setInterval (loadLog, 3000); 
 }
 
+<<<<<<< HEAD
 function loadLog(){
 	readLog();
+=======
+function loadLog() { readLog(); }
+function sendMsg() {
+    var input = document.getElementById("message-input-field");
+    var text = input.value.trim();
+    if (!text) return;
+    input.value = "";
+    writeLog(text);
+>>>>>>> parent of 431c4f4 (แก้ใหม่หมดย้อนกลับไปใช้ของเดิม)
 }
 
 function sendMsg(){

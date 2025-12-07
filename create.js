@@ -20,13 +20,15 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     uploadBtn.addEventListener('click', async () => {
-        uploadBtn.disabled = true;
-        uploadBtn.innerText = "Posting...";
-
-        const myUsername = localStorage.getItem('myUsername') || 'Anonymous';
+        let currentUsername = 'Anonymous';
+        try {
+            const res = await fetch('/get-profile');
+            const data = await res.json();
+            if (data.username) currentUsername = data.username;
+        } catch (err) { console.error(err); }
 
         const formData = new FormData();
-        formData.append('username', myUsername);
+        formData.append('username', currentUsername);
         formData.append('content', contentInput.value);
         if (fileInput.files[0]) {
             formData.append('postImage', fileInput.files[0]);
@@ -39,14 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 window.location.href = 'feed.html';
             } else {
                 alert('Failed to create post');
-                uploadBtn.disabled = false;
-                uploadBtn.innerText = "Post";
             }
-        } catch (err) { 
-            console.error(err); 
-            uploadBtn.disabled = false;
-            uploadBtn.innerText = "Post";
-        }
+        } catch (err) { console.error(err); }
     });
 
     backBtn.addEventListener('click', () => { window.location.href = 'feed.html'; });
